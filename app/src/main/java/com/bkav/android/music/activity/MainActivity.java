@@ -84,9 +84,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
             case R.id.nav_listmusic:{
-//                Intent intent=new Intent(this,LibraryMusic.class);
-//                startActivity(intent);
-//                finish();
                 initFragmentThuVienNhac(THU_VIEN_NHAC);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
