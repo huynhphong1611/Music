@@ -23,7 +23,7 @@ public class RecentSongsAdapter extends BaseCursorAdapter<RecentSongsAdapter.Vie
 
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
-
+        //set cursor
     }
 
     @NonNull

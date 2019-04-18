@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,18 +17,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bkav.android.music.Fragment.FraNgheNgay;
+import com.bkav.android.music.Fragment.FraThuVienNhac;
 import com.bkav.android.music.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     final static String NGHE_NGAY="Nghe Ngay";
+    final static String THU_VIEN_NHAC="Thư viện nhạc";
+    private FraNgheNgay mFraNgheNgay;
+    private FraThuVienNhac mFraThuVienNhac;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(NGHE_NGAY);
+        initFragmentNgheNgay(NGHE_NGAY);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,13 +79,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         switch (item.getItemId()){
             case R.id.nav_nghengay:{
+                initFragmentNgheNgay(NGHE_NGAY);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.nav_listmusic:{
-                Intent intent=new Intent(this,LibraryMusic.class);
-                startActivity(intent);
-                finish();
+//                Intent intent=new Intent(this,LibraryMusic.class);
+//                startActivity(intent);
+//                finish();
+                initFragmentThuVienNhac(THU_VIEN_NHAC);
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.nav_setting:{
@@ -88,10 +98,29 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.nav_help:{
                 //TODO intent help
+                Toast.makeText(this, "help", Toast.LENGTH_SHORT).show();
                 return true;
             }
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void initFragmentNgheNgay(String titleActionBar) {
+
+        setTitle(titleActionBar);
+        mFraNgheNgay = new FraNgheNgay();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment,mFraNgheNgay);
+        fragmentTransaction.commit();
+    }
+    private void initFragmentThuVienNhac(String titleActionBar) {
+
+        setTitle(titleActionBar);
+        mFraThuVienNhac = new FraThuVienNhac();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment,mFraThuVienNhac);
+        fragmentTransaction.commit();
     }
 }
