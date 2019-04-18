@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_nghengay"
+            android:icon="@drawable/nav_musicplayer"
+            android:title="@string/nghe_ngay" />
+        <item
+            android:id="@+id/nav_listmusic"
+            android:icon="@drawable/nav_listmusic"
+            android:title="@string/thuviennhac" />
+    </group>
+
+    <item android:title=" ">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:title="@string/setting" />
+            <item
+                android:id="@+id/nav_help"
+                android:title="@string/trogiup" />
+        </menu>
+    </item>
+
+</menu>
