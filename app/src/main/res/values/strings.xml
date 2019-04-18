@@ -11,4 +11,7 @@
     <string name="thuviennhac">Thư Viện Nhạc</string>
     <string name="setting">Cài đặt</string>
     <string name="trogiup">Trợ giúp và phản hồi</string>
+    <!--object Song-->
+    <string name="name_song">Tên bài hát</string>
+    <string name="name_singer">Tên sa sĩ</string>
 </resources>
