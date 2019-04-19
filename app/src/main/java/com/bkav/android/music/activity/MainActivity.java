@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
     private void initFragmentThuVienNhac(String titleActionBar) {
-
         setTitle(titleActionBar);
         mFraThuVienNhac = new FraThuVienNhac();
         FragmentManager fragmentManager=getSupportFragmentManager();

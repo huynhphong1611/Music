@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bkav.android.music">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <permission
+        android:name="com.bkav.android.music.WRITE_DATABASE"
+        android:label="Write Database"
+        android:protectionLevel="normal" />
 
+    <permission
+        android:name="com.bkav.android.music.READ_DATABASE"
+        android:label="Read Database"
+        android:protectionLevel="normal" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -23,6 +33,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
+        <provider
+            android:authorities="com.bkav.android.music.provider.SongProvider"
+            android:name=".provider.SongProvider"></provider>
+
     </application>
 
 </manifest>

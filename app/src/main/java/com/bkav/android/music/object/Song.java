@@ -5,14 +5,18 @@ public class Song {
     private String mNameSong;
     private String mNameSinger;
     private String mTimeSong;
+    private String mPath;
+    private String mAlbum;
     public Song(){
 
     }
-    public Song(String mNameSong, String mNameSinger, String mTimeSong,long mId) {
+    public Song(String mNameSong, String mNameSinger, String mTimeSong,long mId,String mPath,String mAlbum) {
         this.mNameSong = mNameSong;
         this.mNameSinger = mNameSinger;
         this.mTimeSong = mTimeSong;
         this.mId=mId;
+        this.mPath=mPath;
+        this.mAlbum=mAlbum;
     }
 
     public String getmNameSong() {
@@ -45,5 +49,21 @@ public class Song {
 
     public void setmId(long mId) {
         this.mId = mId;
+    }
+
+    public String getmPath() {
+        return mPath;
+    }
+
+    public void setmPath(String mPath) {
+        this.mPath = mPath;
+    }
+
+    public String getmAlbum() {
+        return mAlbum;
+    }
+
+    public void setmAlbum(String mAlbum) {
+        this.mAlbum = mAlbum;
     }
 }
