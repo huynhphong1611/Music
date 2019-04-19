@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.adapter.RecentSongsAdapter;
 
 public class FraNgheNgay extends Fragment {
+    private RecentSongsAdapter mRecentSongsAdapter;
+
     public FraNgheNgay(){
 
     }
@@ -19,5 +22,8 @@ public class FraNgheNgay extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_nghe_ngay,container,false);
         return view;
+    }
+    public void getAllMediaMp3File(){
+
     }
 }

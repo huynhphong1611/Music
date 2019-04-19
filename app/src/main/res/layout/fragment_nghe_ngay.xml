@@ -13,24 +13,25 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="@string/hoat_dong_gan_day"
-            android:textSize="28sp"
-            android:textStyle="bold"/>
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="@string/note_hoat_dong"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewNgheNgay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="8"
         android:padding="10dp"/>
 
 </LinearLayout>
