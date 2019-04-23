@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 
 import com.bkav.android.music.R;
 
-public class FraBaiHat extends Fragment {
-    public void FraBaiHat(){
+public class FraPlaylists extends Fragment {
+    public void FraPlaylists(){
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_bai_hat,container,false);
+        View view=inflater.inflate(R.layout.fragment_danh_sach_phat,container,false);
         return view;
     }
 }

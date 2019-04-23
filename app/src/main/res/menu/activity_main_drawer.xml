@@ -5,13 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_nghengay"
+            android:id="@+id/nav_nghesi"
             android:icon="@drawable/nav_musicplayer"
             android:title="@string/nghe_ngay" />
         <item
-            android:id="@+id/nav_listmusic"
+            android:id="@+id/nav_album"
             android:icon="@drawable/nav_listmusic"
             android:title="@string/thuviennhac" />
+        <item
+            android:id="@+id/nav_songs"
+            android:icon="@drawable/nav_musicplayer"
+            android:title="@string/bai_hat" />
+        <item
+            android:id="@+id/nav_playlists"
+            android:icon="@drawable/nav_listmusic"
+            android:title="@string/danh_sach_nhac" />
     </group>
 
     <item android:title=" ">

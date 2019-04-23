@@ -1,12 +1,8 @@
 package com.bkav.android.music.activity;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,27 +11,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.PermissionRequest;
 import android.widget.Toast;
 
-import com.bkav.android.music.Fragment.FraNgheNgay;
-import com.bkav.android.music.Fragment.FraThuVienNhac;
+import com.bkav.android.music.Fragment.FraAlbum;
+import com.bkav.android.music.Fragment.FraArtists;
+import com.bkav.android.music.Fragment.FraPlaylists;
+import com.bkav.android.music.Fragment.FraSongs;
 
 import com.bkav.android.music.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    final static String NGHE_NGAY="Nghe Ngay";
-    final static String THU_VIEN_NHAC="Thư viện nhạc";
-    private FraNgheNgay mFraNgheNgay;
-    private FraThuVienNhac mFraThuVienNhac;
+    final static String NGHE_SI="Artists";
+    final static String ALBUM="Album";
+    final static String SONGS="Songs";
+    final static String PLAYLISTS="Playlists";
+    private FraArtists mFraArtists;
+    private FraAlbum mFraAlbum;
+    private FraSongs mFraSongs;
+    private FraPlaylists mFraPlaylists;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        initFragmentNgheNgay(NGHE_NGAY);
+        initFragmentArtists(NGHE_SI);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -80,13 +81,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         switch (item.getItemId()){
-            case R.id.nav_nghengay:{
-                initFragmentNgheNgay(NGHE_NGAY);
+            case R.id.nav_nghesi:{
+                initFragmentArtists(NGHE_SI);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
-            case R.id.nav_listmusic:{
-                initFragmentThuVienNhac(THU_VIEN_NHAC);
+            case R.id.nav_album:{
+                initFragmentAlbum(ALBUM);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+            case R.id.nav_songs:{
+                initFraSongs(SONGS);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+            case R.id.nav_playlists:{
+                initFraPlaylists(PLAYLISTS);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -104,21 +115,37 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void initFragmentNgheNgay(String titleActionBar) {
+    private void initFragmentArtists(String titleActionBar) {
 
         setTitle(titleActionBar);
-        mFraNgheNgay = new FraNgheNgay();
+        mFraArtists = new FraArtists();
         FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment,mFraNgheNgay);
+        fragmentTransaction.replace(R.id.fragment,mFraArtists);
         fragmentTransaction.commit();
     }
-    private void initFragmentThuVienNhac(String titleActionBar) {
+    private void initFragmentAlbum(String titleActionBar) {
         setTitle(titleActionBar);
-        mFraThuVienNhac = new FraThuVienNhac();
+        mFraAlbum = new FraAlbum();
         FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment,mFraThuVienNhac);
+        fragmentTransaction.replace(R.id.fragment,mFraAlbum);
+        fragmentTransaction.commit();
+    }
+    private void initFraSongs(String titleActionBar) {
+        setTitle(titleActionBar);
+        mFraSongs = new FraSongs();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment,mFraSongs);
+        fragmentTransaction.commit();
+    }
+    private void initFraPlaylists(String titleActionBar) {
+        setTitle(titleActionBar);
+        mFraPlaylists = new FraPlaylists();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment,mFraPlaylists);
         fragmentTransaction.commit();
     }
 

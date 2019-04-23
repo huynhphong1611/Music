@@ -15,28 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bkav.android.music.R;
-import com.bkav.android.music.adapter.RecentSongsAdapter;
 import com.bkav.android.music.object.Song;
 import com.bkav.android.music.provider.SongContact;
 
-public class FraNgheNgay extends Fragment {
-    private RecentSongsAdapter mRecentSongsAdapter;
-
-    public FraNgheNgay(){
+public class FraSongs extends Fragment {
+    public void FraSongs(){
 
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_nghe_ngay,container,false);
+        View view=inflater.inflate(R.layout.fragment_bai_hat,container,false);
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getAllMediaMp3FileInDb(getContext());
-    }
 
     public void getAllMediaMp3FileInDb(Context context){
         Uri uri= MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;

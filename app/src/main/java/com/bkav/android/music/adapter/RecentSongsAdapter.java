@@ -30,7 +30,7 @@ public class RecentSongsAdapter extends BaseCursorAdapter<RecentSongsAdapter.Vie
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater=LayoutInflater.from(viewGroup.getContext());
-        final View itemView=layoutInflater.inflate(R.layout.item_song,viewGroup,false);
+        final View itemView=layoutInflater.inflate(R.layout.item_album,viewGroup,false);
         return new ViewHolder(itemView);
     }
     @Override
