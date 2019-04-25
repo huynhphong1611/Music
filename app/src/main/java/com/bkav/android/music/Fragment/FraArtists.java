@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bkav.android.music.R;
-import com.bkav.android.music.adapter.RecentSongsAdapter;
+import com.bkav.android.music.adapter.RecentAlbumsAdapter;
 import com.bkav.android.music.object.Song;
 import com.bkav.android.music.provider.SongContact;
 
 public class FraArtists extends Fragment {
-    private RecentSongsAdapter mRecentSongsAdapter;
+    private RecentAlbumsAdapter mRecentSongsAdapter;
 
     public FraArtists(){
 

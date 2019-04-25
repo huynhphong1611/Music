@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.bkav.android.music.R;
 
-public class RecentSongsAdapter extends BaseCursorAdapter<RecentSongsAdapter.ViewHolder> {
+public class RecentAlbumsAdapter extends BaseCursorAdapter<RecentAlbumsAdapter.ViewHolder> {
 
     private Context mContext;
 
-    public RecentSongsAdapter(Cursor c, Context mContext) {
+    public RecentAlbumsAdapter(Cursor c, Context mContext) {
         super(c);
         this.mContext = mContext;
     }
@@ -42,10 +42,10 @@ public class RecentSongsAdapter extends BaseCursorAdapter<RecentSongsAdapter.Vie
         ImageView imgSong,imgMenu;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtNameSong=(TextView) itemView.findViewById(R.id.txt_Name_Song);
-            txtNameSinger=(TextView) itemView.findViewById(R.id.txt_Name_Singer);
-            imgSong = (ImageView) itemView.findViewById(R.id.img_Song);
-            imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu);
+            txtNameSong=(TextView) itemView.findViewById(R.id.txt_Name_Song_Album);
+            txtNameSinger=(TextView) itemView.findViewById(R.id.txt_Name_Singer_Album);
+            imgSong = (ImageView) itemView.findViewById(R.id.img_Song_Album);
+            imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu_Album);
         }
     }
 }

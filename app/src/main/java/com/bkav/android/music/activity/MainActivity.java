@@ -1,6 +1,11 @@
 package com.bkav.android.music.activity;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -9,8 +14,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bkav.android.music.Fragment.FraAlbum;
@@ -19,6 +29,8 @@ import com.bkav.android.music.Fragment.FraPlaylists;
 import com.bkav.android.music.Fragment.FraSongs;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.object.Song;
+import com.bkav.android.music.provider.SongContact;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,10 +42,14 @@ public class MainActivity extends AppCompatActivity
     private FraAlbum mFraAlbum;
     private FraSongs mFraSongs;
     private FraPlaylists mFraPlaylists;
+    private LinearLayout mLinearLayoutPlayMusic;
+    private boolean mOpened;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLinearLayoutPlayMusic=(LinearLayout) findViewById(R.id.view_play_music);
+        mOpened=false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initFragmentArtists(NGHE_SI);
@@ -42,9 +58,13 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -147,6 +167,41 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment,mFraPlaylists);
         fragmentTransaction.commit();
+    }
+    public void getAllMediaMp3FileInDb(Context context){
+        Uri uri= MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Audio.AudioColumns.DATA,MediaStore.Audio.AudioColumns.TITLE ,MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST};
+        Cursor c = context.getContentResolver().query(uri, projection, MediaStore.Audio.Media.MIME_TYPE +"=?" ,new String[]{"audio/mpeg"}, null);
+
+        if (c != null) {
+            while (c.moveToNext()) {
+                // Create a model object.
+                Song song = new Song();
+
+                String path = c.getString(0);   // Retrieve path.
+                String name = c.getString(1);   // Retrieve name.
+                String album = c.getString(2);  // Retrieve album name.
+                String artist = c.getString(3); // Retrieve artist name.
+
+                // Set data to the model object.
+                song.setmNameSong(name);
+                song.setmPath(path);
+                song.setmNameSinger(artist);
+                song.setmAlbum(album);
+                Log.e("Name :" + name, " Album :" + album);
+                Log.e("Path :" + path, " Artist :" + artist);
+
+                // Add the model object to the db .
+                ContentValues contentValues=new ContentValues();
+                contentValues.put(SongContact.NAME_SONG,song.getmNameSong());
+                contentValues.put(SongContact.NAME_SINGER,song.getmNameSinger());
+                contentValues.put(SongContact.NAME_ALBUM,song.getmAlbum());
+                contentValues.put(SongContact.PATH,song.getmPath());
+                context.getContentResolver().insert(SongContact.CONTENT_URI,contentValues);
+            }
+            c.close();
+        }
+
     }
 
 }
