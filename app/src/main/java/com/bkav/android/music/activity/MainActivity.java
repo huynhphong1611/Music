@@ -31,9 +31,11 @@ import com.bkav.android.music.Fragment.FraSongs;
 import com.bkav.android.music.R;
 import com.bkav.android.music.object.Song;
 import com.bkav.android.music.provider.SongContact;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static String TAG="trang thai";
     final static String NGHE_SI="Artists";
     final static String ALBUM="Album";
     final static String SONGS="Songs";
@@ -43,12 +45,16 @@ public class MainActivity extends AppCompatActivity
     private FraSongs mFraSongs;
     private FraPlaylists mFraPlaylists;
     private LinearLayout mLinearLayoutPlayMusic;
+    private SlidingUpPanelLayout mSlidingUpPanelLayout;
+    private ImageView mPLay;
     private boolean mOpened;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLinearLayoutPlayMusic=(LinearLayout) findViewById(R.id.view_play_music);
+        mPLay=(ImageView) findViewById(R.id.img_play);
+        mLinearLayoutPlayMusic=(LinearLayout) findViewById(R.id.view_list_and_menu);
+        mSlidingUpPanelLayout=(SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mOpened=false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,10 +66,34 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
     protected void onResume() {
+        //cuon va hien slidinglyaout
+        if(mSlidingUpPanelLayout!=null){
+            mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View panel, float slideOffset) {
+                    Log.i(TAG,"panel");
+                }
+
+                @Override
+                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                    if(mSlidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
+                        mPLay.setVisibility(View.GONE);
+                        mLinearLayoutPlayMusic.setVisibility(View.VISIBLE);
+                    }else{
+                        mPLay.setVisibility(View.VISIBLE);
+                        mLinearLayoutPlayMusic.setVisibility(View.GONE);
+                    }
+
+                }
+            });
+        }
+
         super.onResume();
     }
 
