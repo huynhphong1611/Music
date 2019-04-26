@@ -47,21 +47,30 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout mLinearLayoutPlayMusic;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private ImageView mPLay;
-    private boolean mOpened;
+    private ImageView mPLayFull;
+    private ImageView mPLayRandom;
+    private ImageView mPlayLoop;
+    private boolean mCheckPlay;
+    private Toolbar mToolbar;
+    private int mTempLoop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPLay=(ImageView) findViewById(R.id.img_play);
-        mLinearLayoutPlayMusic=(LinearLayout) findViewById(R.id.view_list_and_menu);
-        mSlidingUpPanelLayout=(SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        mOpened=false;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        mPLay = (ImageView) findViewById(R.id.img_play);
+        mPLayFull = (ImageView) findViewById(R.id.image_play_song);
+        mPLayRandom = (ImageView) findViewById(R.id.image_random_song);
+        mPlayLoop = (ImageView) findViewById(R.id.image_loop_song);
+        mLinearLayoutPlayMusic = (LinearLayout) findViewById(R.id.view_list_and_menu);
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
         initFragmentArtists(NGHE_SI);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -93,7 +102,74 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+        //nut play o sliding dang cuon
+        mPLay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPLay.setSelected(!mPLay.isSelected());
 
+                if(mPLay.isSelected()){
+                    mPLay.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_pause_light));
+                    //TODO bat nhac
+                }else mPLay.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_play_light));
+            }
+        });
+        //nut play o sliding dang k cuon
+        mPLayFull.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPLayFull.setSelected(!mPLayFull.isSelected());
+
+                if(mPLayFull.isSelected()){
+                    mPLayFull.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_play_dark));
+                    //TODO bat nhac
+                }else mPLayFull.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_pause_dark));
+            }
+        });
+
+        //nut play radom
+        mPLayRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPLayRandom.setSelected(!mPLayRandom.isSelected());
+
+                if(mPLayRandom.isSelected()){
+                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_play_shuffle_orange));
+                    Toast.makeText(MainActivity.this, "Bật tính năng phát ngẫu nhiên", Toast.LENGTH_SHORT).show();
+                }else{
+                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_shuffle_dark));
+                    Toast.makeText(MainActivity.this, "Tắt tính năng phát ngẫu nhiên", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //nut play loop
+        mTempLoop=1;
+        mPlayLoop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTempLoop += 1;
+                if(mTempLoop>=1||mTempLoop<=3){
+                    switch (mTempLoop){
+                        case 1:{
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark));
+                            Toast.makeText(MainActivity.this, "Tắt lặp lại", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case 2:{
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark_selected));
+                            Toast.makeText(MainActivity.this, "Lặp lại tất cả bài hát", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case 3:{
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_one_song_dark));
+                            Toast.makeText(MainActivity.this, "Lặp lại bài hát hiện tại", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                }
+                if(mTempLoop==3) mTempLoop=0;
+            }
+        });
         super.onResume();
     }
 

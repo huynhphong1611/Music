@@ -57,8 +57,8 @@
                 android:id="@+id/img_play"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_media_play_light" />
 
@@ -66,9 +66,9 @@
                 android:id="@+id/view_list_and_menu"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
                 android:layout_weight="2"
                 android:orientation="horizontal"
-                android:layout_marginTop="15dp"
                 android:visibility="gone">
 
                 <ImageView
@@ -166,10 +166,12 @@
 
                 <ImageView
                     android:id="@+id/image_play_song"
-                    android:layout_width="68dp"
-                    android:layout_height="76dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_fab_play_btn_normal" />
+                    android:background="@drawable/btn_play_background"
+                    app:srcCompat="@drawable/ic_media_play_dark" />
 
                 <ImageView
                     android:id="@+id/image_next_song"
