@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,14 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="horizontal">
+            <!--android:padding="5dp">-->
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
+                android:layout_width="44dp"
+                android:layout_height="74dp"
                 android:layout_weight="1"
+                android:padding="5dp"
                 app:srcCompat="@color/colorPrimaryDark" />
 
             <LinearLayout
@@ -40,6 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:padding="5dp"
                     android:text="@string/name_song"
                     android:textSize="20sp" />
 
@@ -48,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:padding="5dp"
                     android:text="@string/name_singer"
                     android:textSize="14sp" />
 

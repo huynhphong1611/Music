@@ -7,16 +7,18 @@ public class Song {
     private String mTimeSong;
     private String mPath;
     private String mAlbum;
-    public Song(){
+
+    public Song() {
 
     }
-    public Song(String mNameSong, String mNameSinger, String mTimeSong,long mId,String mPath,String mAlbum) {
+
+    public Song(String mNameSong, String mNameSinger, String mTimeSong, long mId, String mPath, String mAlbum) {
         this.mNameSong = mNameSong;
         this.mNameSinger = mNameSinger;
         this.mTimeSong = mTimeSong;
-        this.mId=mId;
-        this.mPath=mPath;
-        this.mAlbum=mAlbum;
+        this.mId = mId;
+        this.mPath = mPath;
+        this.mAlbum = mAlbum;
     }
 
     public String getmNameSong() {

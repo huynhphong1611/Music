@@ -52,12 +52,12 @@ public class SongProvider extends ContentProvider {
             case NOTES:
                 break;
             case NOTE_ID: // Neu no là 1 note cụ thể thì ta sex lấy ic của nó cho thằng where
-                qb.appendWhere( ID+ "=" + uri.getPathSegments().get(1));
+                qb.appendWhere(ID + "=" + uri.getPathSegments().get(1));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        Cursor cursor = qb.query(mSqLiteDatabase,  projection,    selection, selectionArgs,null, null, sortOrder);
+        Cursor cursor = qb.query(mSqLiteDatabase, projection, selection, selectionArgs, null, null, sortOrder);
         return cursor;
     }
 
@@ -65,7 +65,7 @@ public class SongProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         // Trả về type ứng với các uri
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case NOTES:
                 return MULTIPLE_NOTES_MIME_TYPE;
             case NOTE_ID:
@@ -96,7 +96,7 @@ public class SongProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = 0;
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case NOTES:
                 // Truong hop xoa toan bo notes
                 count = mSqLiteDatabase.delete(NAME_TABLE, selection, selectionArgs);
@@ -105,7 +105,7 @@ public class SongProvider extends ContentProvider {
             case NOTE_ID:
                 // Truong hop xoa 1 note
                 String id = uri.getPathSegments().get(1);
-                count = mSqLiteDatabase.delete( NAME_TABLE, ID +  " = " + id +
+                count = mSqLiteDatabase.delete(NAME_TABLE, ID + " = " + id +
                         (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
@@ -122,7 +122,7 @@ public class SongProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int count = 0;
 
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case NOTES:
                 count = mSqLiteDatabase.update(NAME_TABLE, values, selection, selectionArgs);
                 break;
@@ -130,11 +130,11 @@ public class SongProvider extends ContentProvider {
             case NOTE_ID:
                 String id = uri.getPathSegments().get(1);
                 count = mSqLiteDatabase.update(NAME_TABLE, values, ID + " = " + id +
-                        (!TextUtils.isEmpty(selection) ? " AND (" +selection + ')' : ""), selectionArgs);
+                        (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
 
             default:
-                throw new IllegalArgumentException("Unknown URI " + uri );
+                throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
