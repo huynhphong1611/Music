@@ -363,9 +363,8 @@ public class MainActivity extends AppCompatActivity
 
     public void getAllMediaMp3FileInDb(Context context) {
         //lay so luong bai hat trong db de cap nhat va file mp3
-//        Cursor cursor = context.getContentResolver().query(SongContact.CONTENT_URI
-//                , null, null, null, null);
-//        int count = cursor.getCount();
+        Cursor cursor = context.getContentResolver().query(SongContact.CONTENT_URI
+                , null, null, null, null);
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Audio.AudioColumns.DATA
                 , MediaStore.Audio.AudioColumns.TITLE
@@ -376,7 +375,9 @@ public class MainActivity extends AppCompatActivity
                 , MediaStore.Audio.Media.MIME_TYPE + "=?"
                 , new String[]{"audio/mpeg"}, null);
         //nếu số lượng bài hát trong db không thay đổi thì không thêm vào db
-//        if (count == c.getCount()) {
+        if (cursor.getCount() == c.getCount()) {
+            Log.v(LOG,"khong thay doi");
+        }else{
             if (c != null && c.getCount() > 0) {
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                     // Create a model object.
@@ -407,6 +408,8 @@ public class MainActivity extends AppCompatActivity
                 c.close();
             }
 
+
+        }
 
 
     }

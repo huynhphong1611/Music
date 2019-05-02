@@ -11,12 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.provider.SongContact;
 
-public class RecentAlbumsAdapter extends BaseCursorAdapter<RecentAlbumsAdapter.ViewHolder> {
+public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
 
     private Context mContext;
 
-    public RecentAlbumsAdapter(Cursor c, Context mContext) {
+    public AlbumsAdapter(Cursor c, Context mContext) {
         super(c);
         this.mContext = mContext;
     }
@@ -24,6 +25,7 @@ public class RecentAlbumsAdapter extends BaseCursorAdapter<RecentAlbumsAdapter.V
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
         //set cursor
+
     }
 
     @NonNull
