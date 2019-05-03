@@ -13,10 +13,15 @@ public class SongDataBaseHelper extends SQLiteOpenHelper {
     static final String NAME_ALBUM = "name_album";
     static final String PATH = "path";
     static final String ID = "id";
+    static final String ALBUM_ART = "album_art";
+    static final String ALBUM_ID = "album_id";
+    private static final String QUERY_DELETE_TABLE = "" +
+            " DROP TABLE IF EXISTS " + NAME_TABLE;
     public final String DATABASE_CREATE = " CREATE TABLE "
             + NAME_TABLE
             + " ( "
             + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ALBUM_ID + " LONG, "
             + NAME_SONG + " TEXT, "
             + NAME_SINGER + " TEXT, "
             + NAME_ALBUM + " TEXT, "
@@ -35,6 +40,7 @@ public class SongDataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL(QUERY_DELETE_TABLE);
+        onCreate(db);
     }
 }

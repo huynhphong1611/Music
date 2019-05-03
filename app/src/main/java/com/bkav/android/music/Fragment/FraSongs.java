@@ -67,7 +67,7 @@ public class FraSongs extends Fragment implements LoaderManager.LoaderCallbacks<
     public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
         if(i==ID_LOADER){
             sCursorLoader=new CursorLoader(getContext(),SongContact.CONTENT_URI
-                    ,new String[]{SongContact.ID,SongContact.NAME_SONG,SongContact.NAME_SINGER}
+                    ,new String[]{SongContact.ID,SongContact.NAME_SONG,SongContact.NAME_SINGER,SongContact.ALBUM_ID}
                     ,null,null,null);
             return sCursorLoader;
         }

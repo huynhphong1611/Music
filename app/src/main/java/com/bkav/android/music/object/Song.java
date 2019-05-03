@@ -7,18 +7,38 @@ public class Song {
     private String mTimeSong;
     private String mPath;
     private String mAlbum;
+    private String mAlbumArt;
+    private long mAlbumId;
+
+    public long getmAlbumId() {
+        return mAlbumId;
+    }
+
+    public void setmAlbumId(long mAlbumId) {
+        this.mAlbumId = mAlbumId;
+    }
+
+    public String getmAlbumArt() {
+        return mAlbumArt;
+    }
+
+    public void setmAlbumArt(String mAlbumArt) {
+        this.mAlbumArt = mAlbumArt;
+    }
 
     public Song() {
 
     }
 
-    public Song(String mNameSong, String mNameSinger, String mTimeSong, long mId, String mPath, String mAlbum) {
+    public Song(String mNameSong, String mNameSinger, String mTimeSong, long mId, String mPath, String mAlbum,String mAlbumArt,long mAlbumId) {
         this.mNameSong = mNameSong;
         this.mNameSinger = mNameSinger;
         this.mTimeSong = mTimeSong;
         this.mId = mId;
         this.mPath = mPath;
         this.mAlbum = mAlbum;
+        this.mAlbumArt=mAlbumArt;
+        this.mAlbumId=mAlbumId;
     }
 
     public String getmNameSong() {

@@ -2,10 +2,12 @@ package com.bkav.android.music.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -365,15 +367,25 @@ public class MainActivity extends AppCompatActivity
         //lay so luong bai hat trong db de cap nhat va file mp3
         Cursor cursor = context.getContentResolver().query(SongContact.CONTENT_URI
                 , null, null, null, null);
+        //query uri
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.AudioColumns.DATA
-                , MediaStore.Audio.AudioColumns.TITLE
-                , MediaStore.Audio.AudioColumns.ALBUM
-                , MediaStore.Audio.ArtistColumns.ARTIST};
+        //where
+        String where= MediaStore.Audio.Media.IS_MUSIC +"=1";
+        //Columns
+        String[] projection = {
+                MediaStore.Audio.Media.DATA
+                , MediaStore.Audio.Media.TITLE
+                , MediaStore.Audio.Media.ALBUM
+                , MediaStore.Audio.Media.ARTIST
+                , MediaStore.Audio.Media.ALBUM_ID};
+
+        // Perform the query
         Cursor c = context.getContentResolver().query(uri
-                , projection
-                , MediaStore.Audio.Media.MIME_TYPE + "=?"
-                , new String[]{"audio/mpeg"}, null);
+                , projection,where
+                ,null
+                , null
+                ,  null);
+        //*****************************************************
         //nếu số lượng bài hát trong db không thay đổi thì không thêm vào db
         if (cursor.getCount() == c.getCount()) {
             Log.v(LOG,"khong thay doi");
@@ -387,12 +399,15 @@ public class MainActivity extends AppCompatActivity
                     String name = c.getString(1);   // Retrieve name.
                     String album = c.getString(2);  // Retrieve album name.
                     String artist = c.getString(3); // Retrieve artist name.
+                    long albumId = c.getLong(4);// Retrieve album id.
 
                     // Set data to the model object.
                     song.setmNameSong(name);
                     song.setmPath(path);
                     song.setmNameSinger(artist);
                     song.setmAlbum(album);
+                    song.setmAlbumId(albumId);
+                    //song.setmAlbumArt(ablumArt+".png");
                     Log.e("Name :" + name, " Album :" + album);
                     Log.e("Path :" + path, " Artist :" + artist);
                     // delete model object in db
@@ -403,6 +418,7 @@ public class MainActivity extends AppCompatActivity
                     contentValues.put(SongContact.NAME_SINGER, song.getmNameSinger());
                     contentValues.put(SongContact.NAME_ALBUM, song.getmAlbum());
                     contentValues.put(SongContact.PATH, song.getmPath());
+                    contentValues.put(SongContact.ALBUM_ID,song.getmAlbumId());
                     context.getContentResolver().insert(SongContact.CONTENT_URI, contentValues);
                 }
                 c.close();

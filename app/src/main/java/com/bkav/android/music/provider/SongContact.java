@@ -8,6 +8,8 @@ public class SongContact {
     public static final String NAME_SONG = "name_song";
     public static final String NAME_SINGER = "name_singer";
     public static final String NAME_ALBUM = "name_album";
+    public static final String ALBUM_ART="album_art";
+    public static final String ALBUM_ID = "album_id";
     public static final String PATH = "path";
     public static final String ID = "id";
     static final String SINGLE_NOTE_MIME_TYPE =
