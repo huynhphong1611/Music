@@ -1,7 +1,11 @@
 package com.bkav.android.music.adapter;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,7 +28,14 @@ public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
-        //set cursor
+        if (cursor != null) {
+            final int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+            final String nameAlbum = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+            final String nameSinger = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.COMPOSER));
+            holder.txtNameAlbum.setText(nameAlbum);
+            holder.txtNameSinger.setText(nameSinger);
+            holder.imgSong.setImageBitmap(takeImgSong(cursor));
+        }
 
     }
 
@@ -40,14 +51,28 @@ public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
         super.swapCursor(newCursor);
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNameSong,txtNameSinger;
+        TextView txtNameAlbum,txtNameSinger;
         ImageView imgSong,imgMenu;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtNameSong=(TextView) itemView.findViewById(R.id.txt_Name_Song_Album);
+            txtNameAlbum=(TextView) itemView.findViewById(R.id.txt_Name_Song_Album);
             txtNameSinger=(TextView) itemView.findViewById(R.id.txt_Name_Singer_Album);
             imgSong = (ImageView) itemView.findViewById(R.id.img_Song_Album);
             imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu_Album);
         }
+    }
+    //lấy ảnh từ ablum ra thêm vào list
+    public Bitmap takeImgSong(Cursor cursor) {
+        long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+        final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
+        Uri albumArtUri = ContentUris.withAppendedId(ART_CONTENT_URI, albumId);
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), albumArtUri);
+        } catch (Exception exception) {
+            // log error
+        }
+        return bitmap;
     }
 }

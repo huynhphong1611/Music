@@ -12,7 +12,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="10dp"
-        android:background="@drawable/nav_musicplayer"
+        android:background="@drawable/unknown_albums"
         />
 
     <LinearLayout

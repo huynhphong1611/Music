@@ -189,21 +189,6 @@ public class MainActivity extends AppCompatActivity
                 if (mTempLoop == 3) mTempLoop = 0;
             }
         });
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                    //doc file mp3
-                    getAllMediaMp3FileInDb(getBaseContext());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
         Log.v(LOG,"onResume");
         super.onResume();
     }
@@ -363,71 +348,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void getAllMediaMp3FileInDb(Context context) {
-        //lay so luong bai hat trong db de cap nhat va file mp3
-        Cursor cursor = context.getContentResolver().query(SongContact.CONTENT_URI
-                , null, null, null, null);
-        //query uri
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        //where
-        String where= MediaStore.Audio.Media.IS_MUSIC +"=1";
-        //Columns
-        String[] projection = {
-                MediaStore.Audio.Media.DATA
-                , MediaStore.Audio.Media.TITLE
-                , MediaStore.Audio.Media.ALBUM
-                , MediaStore.Audio.Media.ARTIST
-                , MediaStore.Audio.Media.ALBUM_ID};
 
-        // Perform the query
-        Cursor c = context.getContentResolver().query(uri
-                , projection,where
-                ,null
-                , null
-                ,  null);
-        //*****************************************************
-        //nếu số lượng bài hát trong db không thay đổi thì không thêm vào db
-        if (cursor.getCount() == c.getCount()) {
-            Log.v(LOG,"khong thay doi");
-        }else{
-            if (c != null && c.getCount() > 0) {
-                for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                    // Create a model object.
-                    Song song = new Song();
-
-                    String path = c.getString(0);   // Retrieve path.
-                    String name = c.getString(1);   // Retrieve name.
-                    String album = c.getString(2);  // Retrieve album name.
-                    String artist = c.getString(3); // Retrieve artist name.
-                    long albumId = c.getLong(4);// Retrieve album id.
-
-                    // Set data to the model object.
-                    song.setmNameSong(name);
-                    song.setmPath(path);
-                    song.setmNameSinger(artist);
-                    song.setmAlbum(album);
-                    song.setmAlbumId(albumId);
-                    //song.setmAlbumArt(ablumArt+".png");
-                    Log.e("Name :" + name, " Album :" + album);
-                    Log.e("Path :" + path, " Artist :" + artist);
-                    // delete model object in db
-
-                    // Add the model object to the db .
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(SongContact.NAME_SONG, song.getmNameSong());
-                    contentValues.put(SongContact.NAME_SINGER, song.getmNameSinger());
-                    contentValues.put(SongContact.NAME_ALBUM, song.getmAlbum());
-                    contentValues.put(SongContact.PATH, song.getmPath());
-                    contentValues.put(SongContact.ALBUM_ID,song.getmAlbumId());
-                    context.getContentResolver().insert(SongContact.CONTENT_URI, contentValues);
-                }
-                c.close();
-            }
-
-
-        }
-
-
-    }
 
 }

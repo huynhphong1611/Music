@@ -2,58 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="220dp"
+    android:layout_height="220dp"
     >
 
     <ImageView
         android:id="@+id/img_Song_Album"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:background="@color/colorPrimary"
-        android:src="@drawable/img_song"/>
+        android:layout_width="220dp"
+        android:layout_height="140dp"
+        android:background="@drawable/unknown_albums"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:padding="20dp">
-
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal">
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/txt_Name_Song_Album"
-                android:layout_weight="8"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/name_song"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="5dp"/>
+                android:textColor="@color/colorBlack"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txt_Name_Singer_Album"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name_singer"
+                android:textSize="12sp" />
 
-            <ImageView
-                android:id="@+id/img_Menu_Album"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="5dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_menu_moreoverflow_small_normal" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_Name_Singer_Album"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/name_singer"
-            android:textSize="18sp"
-            android:layout_margin="5dp"/>
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/img_Menu_Album"
+            android:layout_alignParentRight="true"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginVertical="5dp"
+            android:src="@drawable/ic_menu_moreoverflow_small_normal" />
+    </RelativeLayout>
 
 </LinearLayout>

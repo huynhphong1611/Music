@@ -18,7 +18,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="5dp"
-                android:background="@drawable/nav_musicplayer" />
+                android:background="@drawable/unknown_albums" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -84,43 +84,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="5"
-                android:background="@color/colorPrimary">
-                <android.support.constraint.ConstraintLayout
+                android:background="@drawable/unknown_artists">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    >
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
                     <ImageView
                         android:id="@+id/imageView2"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/ic_queue_dark"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.026"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.945" />
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_queue_dark" />
 
                     <ImageView
+                        android:id="@+id/imageViewYeuThich"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/ic_stat_favorite_border"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView2"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.949" />
-                </android.support.constraint.ConstraintLayout>
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_stat_favorite_border" />
+                </RelativeLayout>
             </LinearLayout>
             <SeekBar
                 android:id="@+id/seekBar"

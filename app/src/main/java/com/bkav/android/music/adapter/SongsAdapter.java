@@ -28,9 +28,9 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
         if (cursor != null) {
-            final int id = cursor.getInt(cursor.getColumnIndexOrThrow(SongContact.ID));
-            final String nameSong = cursor.getString(cursor.getColumnIndexOrThrow(SongContact.NAME_SONG));
-            final String nameSinger = cursor.getString(cursor.getColumnIndexOrThrow(SongContact.NAME_SINGER));
+            final int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+            final String nameSong = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+            final String nameSinger = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
             holder.txtNameSong.setText(nameSong);
             holder.txtNameSinger.setText(nameSinger);
             holder.imgSong.setImageBitmap(takeImgSong(cursor));
@@ -64,7 +64,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
 
     //lấy ảnh từ ablum ra thêm vào list
     public Bitmap takeImgSong(Cursor cursor) {
-        long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(SongContact.ALBUM_ID));
+        long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
         final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
         Uri albumArtUri = ContentUris.withAppendedId(ART_CONTENT_URI, albumId);
 

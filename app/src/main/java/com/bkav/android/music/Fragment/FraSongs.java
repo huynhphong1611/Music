@@ -65,10 +65,11 @@ public class FraSongs extends Fragment implements LoaderManager.LoaderCallbacks<
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        String where= MediaStore.Audio.Media.IS_MUSIC +"=?";
         if(i==ID_LOADER){
-            sCursorLoader=new CursorLoader(getContext(),SongContact.CONTENT_URI
-                    ,new String[]{SongContact.ID,SongContact.NAME_SONG,SongContact.NAME_SINGER,SongContact.ALBUM_ID}
-                    ,null,null,null);
+            sCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    ,null
+                    ,where,new String[]{"1"},null);
             return sCursorLoader;
         }
         return null;
