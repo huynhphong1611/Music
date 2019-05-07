@@ -16,20 +16,16 @@ import android.widget.TextView;
 
 import com.bkav.android.music.R;
 
-public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
+public class ArtistsAdapter extends BaseCursorAdapter<ArtistsAdapter.ViewHolder> {
     private Context mContext;
 
-    public SongsAdapter(Cursor c) {
-        super(c);
-    }
-
-    public SongsAdapter(Cursor c, Context mContext) {
+    public ArtistsAdapter(Cursor c, Context mContext) {
         super(c);
         this.mContext = mContext;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
+    public void onBindViewHolder(ArtistsAdapter.ViewHolder holder, Cursor cursor) {
         if (cursor != null) {
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
             final String nameSong = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
@@ -41,10 +37,10 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ArtistsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         final View itemView = layoutInflater.inflate(R.layout.item_song, viewGroup, false);
-        return new ViewHolder(itemView);
+        return new ArtistsAdapter.ViewHolder(itemView);
     }
 
     @Override
@@ -80,3 +76,4 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
         return bitmap;
     }
 }
+

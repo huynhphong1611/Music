@@ -1,4 +1,4 @@
-package com.bkav.android.music.Fragment;
+package com.bkav.android.music.fragment;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;

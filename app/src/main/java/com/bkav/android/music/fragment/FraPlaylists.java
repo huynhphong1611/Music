@@ -1,4 +1,4 @@
-package com.bkav.android.music.Fragment;
+package com.bkav.android.music.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

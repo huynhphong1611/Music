@@ -1,9 +1,6 @@
-package com.bkav.android.music.Fragment;
+package com.bkav.android.music.fragment;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,16 +11,12 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.SongsAdapter;
-import com.bkav.android.music.object.Song;
-import com.bkav.android.music.provider.SongContact;
 
 public class FraSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER=1;

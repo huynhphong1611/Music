@@ -1,23 +1,13 @@
 package com.bkav.android.music.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,20 +17,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bkav.android.music.Fragment.FraAlbum;
-import com.bkav.android.music.Fragment.FraArtists;
-import com.bkav.android.music.Fragment.FraPlaylists;
-import com.bkav.android.music.Fragment.FraSongs;
-
 import com.bkav.android.music.R;
-import com.bkav.android.music.object.Song;
-import com.bkav.android.music.provider.SongContact;
-import com.bkav.android.music.provider.SongProvider;
+import com.bkav.android.music.fragment.FraAlbum;
+import com.bkav.android.music.fragment.FraArtists;
+import com.bkav.android.music.fragment.FraPlaylists;
+import com.bkav.android.music.fragment.FraSongs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity
@@ -91,13 +76,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        showSlidingLayout();
         Log.v(LOG,"onCreate");
 
     }
-
-    @Override
-    protected void onResume() {
-
+    private void showSlidingLayout(){
         //cuon va hien slidinglyaout
         if (mSlidingUpPanelLayout != null) {
             mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -189,6 +172,10 @@ public class MainActivity extends AppCompatActivity
                 if (mTempLoop == 3) mTempLoop = 0;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
         Log.v(LOG,"onResume");
         super.onResume();
     }
