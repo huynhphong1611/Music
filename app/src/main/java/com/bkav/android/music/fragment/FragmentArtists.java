@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.AlbumsAdapter;
 
-public class FraArtists extends Fragment {
+public class FragmentArtists extends Fragment {
     private AlbumsAdapter mRecentSongsAdapter;
 
-    public FraArtists(){
+    public FragmentArtists(){
 
     }
     @Nullable

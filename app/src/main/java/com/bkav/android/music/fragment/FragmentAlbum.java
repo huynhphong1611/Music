@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.AlbumsAdapter;
 
-public class FraAlbum extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER=1;
     private RecyclerView mRecyclerViewAlbums;
     private AlbumsAdapter mAlbumsAdapter;
@@ -29,7 +29,7 @@ public class FraAlbum extends Fragment implements LoaderManager.LoaderCallbacks<
         getLoaderManager().initLoader(ID_LOADER,null,this);
     }
 
-    public void FraAlbum(){
+    public void FragmentAlbum(){
 
     }
 

@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import com.bkav.android.music.R;
 
-public class FraPlaylists extends Fragment {
-    public void FraPlaylists(){
+public class FragmentPlaylists extends Fragment {
+    public void FragmentPlaylists(){
 
     }
 

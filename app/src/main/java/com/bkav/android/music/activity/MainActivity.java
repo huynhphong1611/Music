@@ -22,10 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
-import com.bkav.android.music.fragment.FraAlbum;
-import com.bkav.android.music.fragment.FraArtists;
-import com.bkav.android.music.fragment.FraPlaylists;
-import com.bkav.android.music.fragment.FraSongs;
+import com.bkav.android.music.fragment.FragmentAlbum;
+import com.bkav.android.music.fragment.FragmentArtists;
+import com.bkav.android.music.fragment.FragmentPlaylists;
+import com.bkav.android.music.fragment.FragmentSongs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity
@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity
     final static String ALBUM = "Album";
     final static String SONGS = "Songs";
     final static String PLAYLISTS = "Playlists";
-    private FraArtists mFraArtists;
-    private FraAlbum mFraAlbum;
-    private FraSongs mFraSongs;
-    private FraPlaylists mFraPlaylists;
+    private FragmentArtists mFragmentArtists;
+    private FragmentAlbum mFragmentAlbums;
+    private FragmentSongs mFragmentSongs;
+    private FragmentPlaylists mFragmentPlaylists;
     private LinearLayout mLinearLayoutPlayMusic;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private ImageView mPLay;
@@ -252,37 +252,37 @@ public class MainActivity extends AppCompatActivity
     private void initFragmentArtists(String titleActionBar) {
 
         setTitle(titleActionBar);
-        mFraArtists = new FraArtists();
+        mFragmentArtists = new FragmentArtists();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, mFraArtists);
+        fragmentTransaction.replace(R.id.fragment, mFragmentArtists);
         fragmentTransaction.commit();
     }
 
     private void initFragmentAlbum(String titleActionBar) {
         setTitle(titleActionBar);
-        mFraAlbum = new FraAlbum();
+        mFragmentAlbums = new FragmentAlbum();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, mFraAlbum);
+        fragmentTransaction.replace(R.id.fragment, mFragmentAlbums);
         fragmentTransaction.commit();
     }
 
     private void initFraSongs(String titleActionBar) {
         setTitle(titleActionBar);
-        mFraSongs = new FraSongs();
+        mFragmentSongs = new FragmentSongs();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, mFraSongs);
+        fragmentTransaction.replace(R.id.fragment, mFragmentSongs);
         fragmentTransaction.commit();
     }
 
     private void initFraPlaylists(String titleActionBar) {
         setTitle(titleActionBar);
-        mFraPlaylists = new FraPlaylists();
+        mFragmentPlaylists = new FragmentPlaylists();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, mFraPlaylists);
+        fragmentTransaction.replace(R.id.fragment, mFragmentPlaylists);
         fragmentTransaction.commit();
     }
 
