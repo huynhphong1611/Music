@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Music</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Music</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_search">Search</string>
+    <!--navigationView-->
+    <string name="nghe_ngay">Nghệ sĩ</string>
+    <string name="thuviennhac">Album</string>
+    <string name="bai_hat">Bài hát</string>
+    <string name="danh_sach_nhac">Danh sách nhạc</string>
+    <string name="setting">Cài đặt</string>
+    <string name="trogiup">Trợ giúp và phản hồi</string>
+    <!--object Song-->
+    <string name="name_song">Tên bài hát</string>
+    <string name="name_singer">Tên sa sĩ</string>
+    <!--layout nghe ngay-->
+    <string name="hoat_dong_gan_day">Hoạt động gần đây</string>
+    <string name="note_hoat_dong">Đã phát hoặc đã thêm gần đây</string>
+
+</resources>

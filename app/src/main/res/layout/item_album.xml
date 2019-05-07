@@ -2,47 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="160dp"
-    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/papping"
     >
 
     <ImageView
-        android:id="@+id/img_Song_Album"
-        android:layout_width="fill_parent"
-        android:layout_height="120dp"
+        android:id="@+id/img_song_album"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/img_song_album_height"
+        android:scaleType="fitXY"
         android:background="@drawable/unknown_albums"/>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/linear_layout_height"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="32dp"
+            android:layout_height="@dimen/linear_layout_height"
             android:layout_weight="3"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/txt_Name_Song_Album"
+                android:id="@+id/txt_name_song_album"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="@string/name_song"
                 android:textColor="@color/colorBlack"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_name_song_album" />
             <TextView
-                android:id="@+id/txt_Name_Singer_Album"
+                android:id="@+id/txt_name_singer_album"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="@string/name_singer"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_name_singer_album" />
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/img_Menu_Album"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:id="@+id/img_menu_album"
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="@dimen/linear_layout_height"
             android:src="@drawable/ic_menu_moreoverflow_small_normal" />
     </LinearLayout>
 

@@ -54,10 +54,7 @@ public class ArtistsAdapter extends BaseCursorAdapter<ArtistsAdapter.ViewHolder>
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtNameSong = (TextView) itemView.findViewById(R.id.txt_Name_Song);
-            txtNameSinger = (TextView) itemView.findViewById(R.id.txt_Name_Singer);
-            imgSong = (ImageView) itemView.findViewById(R.id.img_Song);
-            imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu_Song);
+
         }
     }
 

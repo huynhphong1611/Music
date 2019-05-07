@@ -55,10 +55,10 @@ public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
         ImageView imgSong,imgMenu;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtNameAlbum=(TextView) itemView.findViewById(R.id.txt_Name_Song_Album);
-            txtNameSinger=(TextView) itemView.findViewById(R.id.txt_Name_Singer_Album);
-            imgSong = (ImageView) itemView.findViewById(R.id.img_Song_Album);
-            imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu_Album);
+            txtNameAlbum=(TextView) itemView.findViewById(R.id.txt_name_song_album);
+            txtNameSinger=(TextView) itemView.findViewById(R.id.txt_name_singer_album);
+            imgSong = (ImageView) itemView.findViewById(R.id.img_song_album);
+            imgMenu = (ImageView) itemView.findViewById(R.id.img_menu_album);
         }
     }
     //lấy ảnh từ ablum ra thêm vào list

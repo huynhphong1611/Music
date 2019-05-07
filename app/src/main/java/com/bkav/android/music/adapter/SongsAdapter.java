@@ -19,10 +19,6 @@ import com.bkav.android.music.R;
 public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     private Context mContext;
 
-    public SongsAdapter(Cursor c) {
-        super(c);
-    }
-
     public SongsAdapter(Cursor c, Context mContext) {
         super(c);
         this.mContext = mContext;
@@ -58,10 +54,10 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtNameSong = (TextView) itemView.findViewById(R.id.txt_Name_Song);
-            txtNameSinger = (TextView) itemView.findViewById(R.id.txt_Name_Singer);
-            imgSong = (ImageView) itemView.findViewById(R.id.img_Song);
-            imgMenu = (ImageView) itemView.findViewById(R.id.img_Menu_Song);
+            txtNameSong = (TextView) itemView.findViewById(R.id.txt_name_song);
+            txtNameSinger = (TextView) itemView.findViewById(R.id.txt_name_singer);
+            imgSong = (ImageView) itemView.findViewById(R.id.img_song);
+            imgMenu = (ImageView) itemView.findViewById(R.id.img_menu_song);
         }
     }
 

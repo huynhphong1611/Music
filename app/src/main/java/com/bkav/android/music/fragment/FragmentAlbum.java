@@ -22,7 +22,7 @@ public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallb
     final static int ID_LOADER=1;
     private RecyclerView mRecyclerViewAlbums;
     private AlbumsAdapter mAlbumsAdapter;
-    public static CursorLoader sCursorLoader;
+    private CursorLoader mCursorLoader;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -37,13 +37,14 @@ public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_album,container,false);
-        mRecyclerViewAlbums=(RecyclerView) view.findViewById(R.id.recyclerViewAlbums);
+        mRecyclerViewAlbums=(RecyclerView) view.findViewById(R.id.recycler_view_albums);
         mRecyclerViewAlbums.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(view.getContext()
                 ,2,GridLayoutManager.VERTICAL,false);
         mRecyclerViewAlbums.setLayoutManager(gridLayoutManager);
 //        AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(getContext(), 500);
 //        mRecyclerViewAlbums.setLayoutManager(layoutManager);
+        //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
         mAlbumsAdapter=new AlbumsAdapter(null,getContext());
         mRecyclerViewAlbums.setAdapter(mAlbumsAdapter);
         return view;
@@ -60,10 +61,10 @@ public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallb
     public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
         String where= MediaStore.Audio.Media.IS_MUSIC +"=?";
         if(i==ID_LOADER){
-            sCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                     ,null
                     ,where,new String[]{"1"},null);
-            return sCursorLoader;
+            return mCursorLoader;
         }
         return null;
     }

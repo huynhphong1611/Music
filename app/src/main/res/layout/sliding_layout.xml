@@ -6,18 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:padding="@dimen/papping"
     android:visibility="visible">
     <!--*****Layout cho phan dau-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="@dimen/sliding_layout_height"
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="5dp"
+                android:id="@+id/image_view_song"
+                android:layout_width="@dimen/sliding_image_view_song"
+                android:layout_height="@dimen/sliding_image_view_song"
+                android:padding="@dimen/papping"
                 android:background="@drawable/unknown_albums" />
 
             <LinearLayout
@@ -26,45 +26,45 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/txt_Name_Song_play"
+                    android:id="@+id/txt_name_song_play"
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
+                    android:layout_height="@dimen/sliding_txt_name_song_play_height"
                     android:textColor="@color/colorBlack"
                     android:text="@string/name_song"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_name_song" />
 
                 <TextView
-                    android:id="@+id/txt_Name_Singer_play"
+                    android:id="@+id/txt_name_singer_play"
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
+                    android:layout_height="@dimen/sliding_txt_name_singer_play_height"
                     android:text="@string/name_singer"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_name_singer" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/img_play"
-                android:layout_width="32dp"
+                android:layout_width="@dimen/sliding_img_play"
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_media_play_light" />
 
             <LinearLayout
                 android:id="@+id/view_list_and_menu"
-                android:layout_width="64dp"
+                android:layout_width="@dimen/sliding_layout_width"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/view_list_and_menu_marginTop"
                 android:visibility="gone">
                 <ImageView
                     android:id="@+id/img_list_music"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/image_view_list_muisc"
+                    android:layout_height="@dimen/image_view_list_muisc"
                     app:srcCompat="@drawable/ic_queue_dark" />
 
                 <ImageView
                     android:id="@+id/img_menu_music"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/image_view_menu_muisc"
+                    android:layout_height="@dimen/image_view_menu_muisc"
                     app:srcCompat="@drawable/ic_menu_moreoverflow_normal" />
             </LinearLayout>
         </LinearLayout>
@@ -74,7 +74,7 @@
     <!--*****Layout cho phan hinh anh****-->
 
         <LinearLayout
-            android:id="@+id/view_ImgCasi_Full"
+            android:id="@+id/view_imgCasi_full"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -90,27 +90,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-
+                    android:padding="@dimen/papping">
                     <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:id="@+id/imagea_view_x"
+                        android:layout_width="@dimen/sliding_img_small"
+                        android:layout_height="@dimen/sliding_img_small"
                         android:layout_alignParentLeft="true"
                         android:src="@drawable/ic_queue_dark" />
 
                     <ImageView
-                        android:id="@+id/imageViewYeuThich"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:id="@+id/image_view_yeu_thich"
+                        android:layout_width="@dimen/sliding_img_small"
+                        android:layout_height="@dimen/sliding_img_small"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/ic_stat_favorite_border" />
                 </RelativeLayout>
             </LinearLayout>
             <SeekBar
-                android:id="@+id/seekBar"
+                android:id="@+id/seek_bar_time_play"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite" />
@@ -124,14 +121,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/txtTimeStart"
+                        android:id="@+id/txt_time_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="00:00" />
 
                     <TextView
-                        android:id="@+id/txtTimeEnd"
+                        android:id="@+id/txt_time_end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -144,42 +141,42 @@
                     <ImageView
                         android:id="@+id/image_loop_song"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="@dimen/sliding_img_normal"
                         android:layout_weight="1"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@dimen/layout_marginTop"
                         app:srcCompat="@drawable/ic_repeat_dark" />
 
                     <ImageView
                         android:id="@+id/image_pre_song"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="@dimen/sliding_img_normal"
                         android:layout_weight="1"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@dimen/layout_marginTop"
                         app:srcCompat="@drawable/ic_rew_dark" />
 
                     <ImageView
                         android:id="@+id/image_play_song"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/sliding_img"
+                        android:layout_height="@dimen/sliding_img"
                         android:gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/layout_marginTop"
                         android:background="@drawable/btn_play_background"
                         app:srcCompat="@drawable/ic_media_play_dark" />
 
                     <ImageView
                         android:id="@+id/image_next_song"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="@dimen/sliding_img_normal"
                         android:layout_weight="1"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@dimen/layout_marginTop"
                         app:srcCompat="@drawable/ic_fwd_dark" />
 
                     <ImageView
                         android:id="@+id/image_random_song"
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="@dimen/sliding_img_normal"
                         android:layout_weight="1"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@dimen/layout_marginTop"
                         app:srcCompat="@drawable/ic_shuffle_dark" />
                 </LinearLayout>
 

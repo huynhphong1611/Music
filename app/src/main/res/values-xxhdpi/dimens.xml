@@ -1,0 +1,42 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="layout_margin_recyclerview">8dp</dimen>
+    <dimen name="papping">5dp</dimen>
+    <dimen name="linear_layout_height">32dp</dimen>
+    <dimen name="linear_layout_width">32dp</dimen>
+    <!--********sliding_layout**********-->
+    <dimen name="sliding_layout_height">64dp</dimen>
+    <dimen name="sliding_layout_width">64dp</dimen>
+    <dimen name="image_view_list_muisc">32dp</dimen>
+    <dimen name="image_view_menu_muisc">32dp</dimen>
+    <dimen name="view_list_and_menu_marginTop">10dp</dimen>
+    <dimen name="sliding_image_view_song">48dp</dimen>
+    <dimen name="sliding_txt_name_song_play_height">24dp</dimen>
+    <dimen name="sliding_txt_name_singer_play_height">24dp</dimen>
+    <dimen name="sliding_img_play">32dp</dimen>
+    <dimen name="sliding_img_small">24dp</dimen>
+    <dimen name="sliding_img_normal">36dp</dimen>
+    <dimen name="sliding_img">36dp</dimen>
+    <dimen name="layout_marginTop">15dp</dimen>
+    <!--********************************-->
+    <!--************item_album**********-->
+    <dimen name="img_song_album_height">120dp</dimen>
+    <!--********************************-->
+    <!--************item_song**********-->
+    <dimen name="img">48dp</dimen>
+    <dimen name="img_small">24dp</dimen>
+    <dimen name="img_normal">32dp</dimen>
+    <dimen name="margin">5dp</dimen>
+    <dimen name="item_song_layout_height">64dp</dimen>
+    <!--********************************-->
+    <!--size text-->
+    <dimen name="text_size_name_song">16sp</dimen>
+    <dimen name="text_size_name_singer">14sp</dimen>
+    <dimen name="text_size_name_song_album">12sp</dimen>
+    <dimen name="text_size_name_singer_album">10sp</dimen>
+</resources>
