@@ -13,11 +13,25 @@
     <string name="danh_sach_nhac">Danh sách nhạc</string>
     <string name="setting">Cài đặt</string>
     <string name="trogiup">Trợ giúp và phản hồi</string>
+    <string name="artists">Artists</string>
+    <string name="album">Album</string>
+    <string name="songs">Songs</string>
+    <string name="playlist">Playlists</string>
+    <string name="permission_isnt_granted">Permission is not granted</string>
+    <string name="dont_granted_and_dont_show_dialog_again">Permisson donot granted and dont show dialog again</string>
+    <string name="read_is_granted">Permision Read File is Granted</string>
+    <string name="read_is_deied">Permision Read File is Denied</string>
+    <string name="write_is_granted">Permision Write File is Granted</string>
+    <string name="write_is_deied">Permision Write File is Denied</string>
     <!--object Song-->
     <string name="name_song">Tên bài hát</string>
     <string name="name_singer">Tên sa sĩ</string>
     <!--layout nghe ngay-->
     <string name="hoat_dong_gan_day">Hoạt động gần đây</string>
     <string name="note_hoat_dong">Đã phát hoặc đã thêm gần đây</string>
-
+    <string name="loop_song_off">Tắt lặp lại</string>
+    <string name="loop_song_alllist">Lặp lại tất cả bài hát</string>
+    <string name="loop_song_present">Lặp lại bài hát hiện tại</string>
+    <string name="off_random_play">Tắt tính năng phát ngẫu nhiên</string>
+    <string name="on_random_play">Bật tính năng phát ngẫu nhiên</string>
 </resources>

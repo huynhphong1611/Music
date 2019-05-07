@@ -29,15 +29,14 @@ import com.bkav.android.music.fragment.FragmentSongs;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,SlidingUpPanelLayout.PanelSlideListener {
     final static String  LOG= "trang thai ";
+    public static final int LOOP_SONG_OFF=1;
+    public static final int LOOP_SONG_ALLLIST=2;
+    public static final int LOOP_SONG_PRESENT=3;
     public static int MY_PERMISSIONS_REQUEST = 1;
     public static int[] NUMBER_MY_PERMISSIONS_REQUEST = {0, 1};
     public static String TAG = "trang thai";
-    final static String NGHE_SI = "Artists";
-    final static String ALBUM = "Album";
-    final static String SONGS = "Songs";
-    final static String PLAYLISTS = "Playlists";
     private FragmentArtists mFragmentArtists;
     private FragmentAlbum mFragmentAlbums;
     private FragmentSongs mFragmentSongs;
@@ -48,9 +47,6 @@ public class MainActivity extends AppCompatActivity
     private ImageView mPLayFull;
     private ImageView mPLayRandom;
     private ImageView mPlayLoop;
-    private boolean mCheckPlay;
-    private boolean checkRead;
-    private boolean checkWrite;
     private Toolbar mToolbar;
     private int mTempLoop;
 
@@ -59,6 +55,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initPermission();
+
         mPLay = (ImageView) findViewById(R.id.img_play);
         mPLayFull = (ImageView) findViewById(R.id.image_play_song);
         mPLayRandom = (ImageView) findViewById(R.id.image_random_song);
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
-        initFragmentArtists(NGHE_SI);
+        initFragmentArtists(R.string.artists);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -76,104 +73,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        showSlidingLayout();
+        //lang nghe onCLick
+        mPLay.setOnClickListener(this);
+        mPLayRandom.setOnClickListener(this);
+        mPLayFull.setOnClickListener(this);
+        mTempLoop = 1;
+        mPlayLoop.setOnClickListener(this);
+        mSlidingUpPanelLayout.addPanelSlideListener(this);
+        /***********************************/
         Log.v(LOG,"onCreate");
 
     }
-    private void showSlidingLayout(){
-        //cuon va hien slidinglyaout
-        if (mSlidingUpPanelLayout != null) {
-            mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-                @Override
-                public void onPanelSlide(View panel, float slideOffset) {
-                    Log.i(TAG, "panel");
-                }
-
-                @Override
-                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                    if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                        mPLay.setVisibility(View.GONE);
-                        mLinearLayoutPlayMusic.setVisibility(View.VISIBLE);
-                    } else {
-                        mPLay.setVisibility(View.VISIBLE);
-                        mLinearLayoutPlayMusic.setVisibility(View.GONE);
-                    }
-
-                }
-            });
-        }
-        //nut play o sliding dang cuon
-        mPLay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPLay.setSelected(!mPLay.isSelected());
-
-                if (mPLay.isSelected()) {
-                    mPLay.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_pause_light));
-                    //TODO bat nhac
-                } else
-                    mPLay.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_play_light));
-            }
-        });
-        //nut play o sliding dang k cuon
-        mPLayFull.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPLayFull.setSelected(!mPLayFull.isSelected());
-
-                if (mPLayFull.isSelected()) {
-                    mPLayFull.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_play_dark));
-                    //TODO bat nhac
-                } else
-                    mPLayFull.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_media_pause_dark));
-            }
-        });
-
-        //nut play radom
-        mPLayRandom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPLayRandom.setSelected(!mPLayRandom.isSelected());
-
-                if (mPLayRandom.isSelected()) {
-                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_play_shuffle_orange));
-                    Toast.makeText(MainActivity.this, "Bật tính năng phát ngẫu nhiên", Toast.LENGTH_SHORT).show();
-                } else {
-                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_shuffle_dark));
-                    Toast.makeText(MainActivity.this, "Tắt tính năng phát ngẫu nhiên", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        //nut play loop
-        mTempLoop = 1;
-        mPlayLoop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTempLoop += 1;
-                if (mTempLoop >= 1 || mTempLoop <= 3) {
-                    switch (mTempLoop) {
-                        case 1: {
-                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark));
-                            Toast.makeText(MainActivity.this, "Tắt lặp lại", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        case 2: {
-                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark_selected));
-                            Toast.makeText(MainActivity.this, "Lặp lại tất cả bài hát", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        case 3: {
-                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_one_song_dark));
-                            Toast.makeText(MainActivity.this, "Lặp lại bài hát hiện tại", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    }
-                }
-                if (mTempLoop == 3) mTempLoop = 0;
-            }
-        });
-    }
-
     @Override
     protected void onResume() {
         Log.v(LOG,"onResume");
@@ -215,22 +125,22 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         switch (item.getItemId()) {
             case R.id.nav_nghesi: {
-                initFragmentArtists(NGHE_SI);
+                initFragmentArtists(R.string.artists);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.nav_album: {
-                initFragmentAlbum(ALBUM);
+                initFragmentAlbum(R.string.album);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.nav_songs: {
-                initFraSongs(SONGS);
+                initFraSongs(R.string.songs);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             case R.id.nav_playlists: {
-                initFraPlaylists(PLAYLISTS);
+                initFraPlaylists(R.string.playlist);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -249,7 +159,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void initFragmentArtists(String titleActionBar) {
+    private void initFragmentArtists(int titleActionBar) {
 
         setTitle(titleActionBar);
         mFragmentArtists = new FragmentArtists();
@@ -259,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void initFragmentAlbum(String titleActionBar) {
+    private void initFragmentAlbum(int titleActionBar) {
         setTitle(titleActionBar);
         mFragmentAlbums = new FragmentAlbum();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -268,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void initFraSongs(String titleActionBar) {
+    private void initFraSongs(int titleActionBar) {
         setTitle(titleActionBar);
         mFragmentSongs = new FragmentSongs();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -277,7 +187,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void initFraPlaylists(String titleActionBar) {
+    private void initFraPlaylists(int titleActionBar) {
         setTitle(titleActionBar);
         mFragmentPlaylists = new FragmentPlaylists();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -293,11 +203,11 @@ public class MainActivity extends AppCompatActivity
                 //Permisson don't granted
                 if (shouldShowRequestPermissionRationale(
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(MainActivity.this, "Permission isn't granted ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.permission_isnt_granted, Toast.LENGTH_SHORT).show();
                 }
                 // Permisson don't granted and dont show dialog again.
                 else {
-                    Toast.makeText(MainActivity.this, "Permisson don't granted and dont show dialog again ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.dont_granted_and_dont_show_dialog_again, Toast.LENGTH_SHORT).show();
                 }
                 //Register permission
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST);
@@ -313,17 +223,17 @@ public class MainActivity extends AppCompatActivity
                 switch (i) {
                     case 0:
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(MainActivity.this, "Permision Read File is Granted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.read_is_granted, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.this, "Permision Read File is Denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.read_is_deied, Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         break;
                     case 1:
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(MainActivity.this, "Permision Write File is Granted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.write_is_granted, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.this, "Permision Write File is Denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.write_is_deied, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     default:
@@ -335,6 +245,91 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //thuc hien onClick cua cac phim play loop random
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+            case R.id.img_play:{
+                //nut play o sliding dang cuon
+                mPLay.setSelected(!mPLay.isSelected());
+
+                if (mPLay.isSelected()) {
+                    mPLay.setImageDrawable(getBaseContext().getResources()
+                            .getDrawable(R.drawable.ic_media_pause_light));
+                    //TODO bat nhac
+                } else
+                    mPLay.setImageDrawable(getBaseContext().getResources()
+                            .getDrawable(R.drawable.ic_media_play_light));
+                break;
+            }
+            case R.id.image_play_song:{
+                mPLayFull.setSelected(!mPLayFull.isSelected());
+
+                if (mPLayFull.isSelected()) {
+                    mPLayFull.setImageDrawable(getBaseContext().getResources()
+                            .getDrawable(R.drawable.ic_media_play_dark));
+                    //TODO bat nhac
+                } else
+                    mPLayFull.setImageDrawable(getBaseContext().getResources()
+                            .getDrawable(R.drawable.ic_media_pause_dark));
+                break;
+            }
+            case R.id.image_loop_song:{
+                mTempLoop += 1;
+                if (mTempLoop >= 1 || mTempLoop <= 3) {
+                    switch (mTempLoop) {
+                        case LOOP_SONG_OFF: {
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark));
+                            Toast.makeText(MainActivity.this, R.string.loop_song_off, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case LOOP_SONG_ALLLIST: {
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark_selected));
+                            Toast.makeText(MainActivity.this, R.string.loop_song_alllist, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case LOOP_SONG_PRESENT: {
+                            mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_one_song_dark));
+                            Toast.makeText(MainActivity.this, R.string.loop_song_present, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                }
+                if (mTempLoop == 3) mTempLoop = 0;
+                break;
+            }
+            case R.id.image_random_song:{
+                mPLayRandom.setSelected(!mPLayRandom.isSelected());
+
+                if (mPLayRandom.isSelected()) {
+                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_play_shuffle_orange));
+                    Toast.makeText(MainActivity.this, R.string.on_random_play, Toast.LENGTH_SHORT).show();
+                } else {
+                    mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_shuffle_dark));
+                    Toast.makeText(MainActivity.this, R.string.off_random_play, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
 
 
+    /*phan lang nghe cua SlidingUpPanelLayout*/
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+        Log.i(TAG, "panel");
+    }
+
+    @Override
+    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+        if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            mPLay.setVisibility(View.GONE);
+            mLinearLayoutPlayMusic.setVisibility(View.VISIBLE);
+        } else {
+            mPLay.setVisibility(View.VISIBLE);
+            mLinearLayoutPlayMusic.setVisibility(View.GONE);
+        }
+    }
+    /**********************************************/
 }
