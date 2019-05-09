@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bkav.android.music.R;
-import com.bkav.android.music.provider.SongContact;
 
 public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
 
@@ -35,6 +34,7 @@ public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
             holder.txtNameAlbum.setText(nameAlbum);
             holder.txtNameSinger.setText(nameSinger);
             holder.imgSong.setImageBitmap(takeImgSong(cursor));
+
         }
 
     }

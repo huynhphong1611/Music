@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_layout_item_artists"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_song_layout_height"
+    android:layout_margin="@dimen/margin"
+    android:orientation="horizontal">
+
+    <GridLayout
+        android:id="@+id/img_grid_song"
+        android:layout_width="@dimen/img"
+        android:layout_height="@dimen/img"
+        android:columnCount="2"
+        android:rowCount="2">
+        <ImageView
+            android:id="@+id/img_song_1"
+            android:layout_width="@dimen/img_grid"
+            android:layout_height="@dimen/img_grid"
+            />
+        <ImageView
+            android:id="@+id/img_song_2"
+            android:layout_width="@dimen/img_grid"
+            android:layout_height="@dimen/img_grid"
+            />
+        <ImageView
+            android:id="@+id/img_song_3"
+            android:layout_width="@dimen/img_grid"
+            android:layout_height="@dimen/img_grid"
+            />
+        <ImageView
+            android:id="@+id/img_song_4"
+            android:layout_width="@dimen/img_grid"
+            android:layout_height="@dimen/img_grid"
+            />
+    </GridLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="@dimen/papping"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_name_artists"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_small"
+            android:textSize="@dimen/text_size_name_song"
+            android:gravity="center|left"
+            android:text="@string/name_singer" />
+
+        <TextView
+            android:id="@+id/txt_count_album"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_small"
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center|left"
+            android:textSize="@dimen/text_size_name_singer"
+            android:text="@string/count_album" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/img_menu_artists"
+        android:layout_width="@dimen/img_normal"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin"
+        android:src="@drawable/ic_menu_moreoverflow_small_normal" />
+    <com.bkav.android.music.expandablerecycleview.ExpandableLinearLayout
+        android:id="@+id/expandableView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_song_layout_height"
+        app:expandDuration="500"
+        android:visibility="gone"
+        >
+        <include
+            layout="@layout/item_song"
+            />
+    </com.bkav.android.music.expandablerecycleview.ExpandableLinearLayout>
+</LinearLayout>

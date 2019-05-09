@@ -33,7 +33,9 @@
     <dimen name="img_normal">32dp</dimen>
     <dimen name="margin">5dp</dimen>
     <dimen name="item_song_layout_height">64dp</dimen>
+    <dimen name="img_grid">24dp</dimen>
     <!--********************************-->
+
     <!--size text-->
     <dimen name="text_size_name_song">16sp</dimen>
     <dimen name="text_size_name_singer">14sp</dimen>
