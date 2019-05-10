@@ -26,10 +26,13 @@ import com.bkav.android.music.fragment.FragmentAlbum;
 import com.bkav.android.music.fragment.FragmentArtists;
 import com.bkav.android.music.fragment.FragmentPlaylists;
 import com.bkav.android.music.fragment.FragmentSongs;
+import com.bkav.android.music.interfaces.ItemClickListenerSong;
+import com.bkav.android.music.object.Song;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,SlidingUpPanelLayout.PanelSlideListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener
+        ,SlidingUpPanelLayout.PanelSlideListener {
     final static String  LOG= "trang thai ";
     public static final int LOOP_SONG_OFF=1;
     public static final int LOOP_SONG_ALLLIST=2;
@@ -331,5 +334,6 @@ public class MainActivity extends AppCompatActivity
             mLinearLayoutPlayMusic.setVisibility(View.GONE);
         }
     }
+
     /**********************************************/
 }

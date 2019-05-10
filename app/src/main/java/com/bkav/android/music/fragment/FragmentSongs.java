@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,17 +15,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.AlbumsAdapter;
 import com.bkav.android.music.adapter.SongsAdapter;
+import com.bkav.android.music.interfaces.ItemClickListenerSong;
+import com.bkav.android.music.object.Song;
 
-public class FragmentSongs extends FragmentBase implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER=1;
     private CursorLoader mCursorLoader;
     private RecyclerView mRecyclerViewSongs;
     private SongsAdapter mSongsAdapter;
 
+    public interface OnSelectedListener{
+        public void onSelectedListener();
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -40,10 +47,21 @@ public class FragmentSongs extends FragmentBase implements LoaderManager.LoaderC
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_bai_hat,container,false);
         mRecyclerViewSongs=(RecyclerView) view.findViewById(R.id.recycler_view_songs);
+        /***set su kien click item cua recyccler view***/
+        mRecyclerViewSongs.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerViewSongs
+                , new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+        }));
+
+        /***********************************************/
         mRecyclerViewSongs.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
                 ,LinearLayoutManager.VERTICAL,false);
         mRecyclerViewSongs.setLayoutManager(linearLayoutManager);
+
         //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
         mSongsAdapter=new SongsAdapter(null,getContext());
         mRecyclerViewSongs.setAdapter(mSongsAdapter);

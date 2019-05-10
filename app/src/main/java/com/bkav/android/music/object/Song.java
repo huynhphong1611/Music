@@ -8,13 +8,13 @@ public class Song {
     private String mPath;
     private String mAlbum;
     private String mAlbumArt;
-    private long mAlbumId;
+    private String mAlbumId;
 
-    public long getmAlbumId() {
+    public String getmAlbumId() {
         return mAlbumId;
     }
 
-    public void setmAlbumId(long mAlbumId) {
+    public void setmAlbumId(String mAlbumId) {
         this.mAlbumId = mAlbumId;
     }
 
@@ -30,7 +30,8 @@ public class Song {
 
     }
 
-    public Song(String mNameSong, String mNameSinger, String mTimeSong, long mId, String mPath, String mAlbum,String mAlbumArt,long mAlbumId) {
+    public Song(String mNameSong, String mNameSinger, String mTimeSong, long mId
+            , String mPath, String mAlbum,String mAlbumArt,String mAlbumId) {
         this.mNameSong = mNameSong;
         this.mNameSinger = mNameSinger;
         this.mTimeSong = mTimeSong;
