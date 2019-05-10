@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 public abstract  class BaseCursorAdapter <V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
-    private Cursor mCursor;
-    private boolean mDataValid;
+    public static Cursor mCursor;
+    public static boolean mDataValid;
     private int mRowIDColumn;
 
     public abstract void onBindViewHolder(V holder, Cursor cursor);
@@ -51,7 +51,7 @@ public abstract  class BaseCursorAdapter <V extends RecyclerView.ViewHolder> ext
         return mCursor.getLong(mRowIDColumn);
     }
 
-    public Cursor getItem(int position) {
+    public static Cursor getItem(int position) {
         if (!mDataValid) {
             throw new IllegalStateException("Cannot lookup item id when cursor is in invalid state.");
         }

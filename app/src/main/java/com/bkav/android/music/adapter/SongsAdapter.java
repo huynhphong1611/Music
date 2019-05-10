@@ -64,13 +64,13 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v, int position) {
                     Song song=getSongItem(position);
-                    mItemClickListenerSong.takeSongFromAdapter(song);
+                    mItemClickListenerSong.takeSongFromAdapter(song,position);
                     Toast.makeText(mContext, song.getmNameSong(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
-    public Song getSongItem(int position){
+    public static Song getSongItem(int position){
         Cursor cursor=getItem(position);
         Song song=new Song (cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
                 ,cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
@@ -117,7 +117,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     }
 
     //lấy ảnh từ ablum ra thêm vào list
-    public String takeURIImgSong(Cursor cursor) {
+    public static String takeURIImgSong(Cursor cursor) {
         long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
         final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
         Uri albumArtUri = ContentUris.withAppendedId(ART_CONTENT_URI, albumId);

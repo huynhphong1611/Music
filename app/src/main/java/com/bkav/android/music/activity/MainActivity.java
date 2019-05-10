@@ -1,7 +1,9 @@
 package com.bkav.android.music.activity;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.adapter.SongsAdapter;
 import com.bkav.android.music.fragment.FragmentAlbum;
 import com.bkav.android.music.fragment.FragmentArtists;
 import com.bkav.android.music.fragment.FragmentPlaylists;
@@ -48,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener
-        ,SlidingUpPanelLayout.PanelSlideListener, OnSelectedListener {
+        ,SlidingUpPanelLayout.PanelSlideListener, OnSelectedListener, SeekBar.OnSeekBarChangeListener {
     final static String  LOG= "trang thai ";
     public static final int LOOP_SONG_OFF=1;
     public static final int LOOP_SONG_ALLLIST=2;
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity
     private int mTempLoop;
     private MediaPlayer mMediaPlayer;
     private Handler threadHandler;
+    private int mPositonSongCurren;
+    private int mDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         mTempLoop = 1;
         mPlayLoop.setOnClickListener(this);
         mSlidingUpPanelLayout.addPanelSlideListener(this);
+        mSeekBar.setOnSeekBarChangeListener(this);
         /***********************************/
 
         Log.v(LOG,"onCreate");
@@ -397,9 +403,81 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSelectedListener(Song song) {
+    public void onSelectedListener(Song song,  int position) {
+        mPositonSongCurren=position;
         threadHandler = new Handler();
         /****************cho bai hat chạy*************/
+        mMediaPlayer=initInfoSonginSlidingLayout(song);
+        mMediaPlayer.start();
+        mDuration= mMediaPlayer.getDuration();
+        mSeekBar.setMax(mDuration);
+        mTimeSong.setText(millisecondsToString(mDuration));
+
+        // Tạo một thread để update trạng thái của SeekBar.
+        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+        threadHandler.postDelayed(updateSeekBarThread,50);
+
+    }
+    // Chuyển số lượng milli giây thành một String có ý nghĩa.
+    private String millisecondsToString(int milliseconds)  {
+        long minutes = (milliseconds / 1000) / 60;
+        long seconds = (milliseconds / 1000) % 60;
+        return minutes+":"+ seconds;
+    }
+    /***Seek Bar Lang nghe****/
+        int progress;
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progressVulue, boolean fromUser) {
+            progress=progressVulue;
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mMediaPlayer.seekTo(progress);
+            if(progress==mDuration){
+                nextWhileEndTime();
+            }else{
+                mMediaPlayer.start();
+            }
+
+        }
+    /****************************/
+    // Thread sử dụng để Update trạng thái cho SeekBar.
+    class UpdateSeekBarThread implements Runnable {
+
+        public void run()  {
+            int currentPosition = mMediaPlayer.getCurrentPosition();
+            mTimeCurrenSong.setText(millisecondsToString(currentPosition));
+
+            mSeekBar.setProgress(currentPosition);
+
+            // Ngừng thread 50 mili giây.
+            threadHandler.postDelayed(this, 50);
+
+        }
+    }
+    /*ham chuyen bai khi chay het*/
+    public void nextWhileEndTime(){
+
+            //TODO chay lai hoac next
+            /*next*/
+            mPositonSongCurren++;
+            Song songNext=SongsAdapter.getSongItem(mPositonSongCurren);
+            mMediaPlayer=initInfoSonginSlidingLayout(songNext);
+            mMediaPlayer.start();
+            Log.v(LOG,"end");
+            mSeekBar.setMax(mMediaPlayer.getDuration());
+            mTimeSong.setText(millisecondsToString(mMediaPlayer.getDuration()));
+
+
+    }
+    /*ham init thong thin bai hat len Sliding layout*/
+    public MediaPlayer initInfoSonginSlidingLayout(Song song){
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
         mNameSong.setText(song.getmNameSong());
@@ -419,62 +497,9 @@ public class MainActivity extends AppCompatActivity
         }
         if(mMediaPlayer.isPlaying()){
             mMediaPlayer.pause();
-            mMediaPlayer = MediaPlayer.create(this,Uri.parse(song.getmPath()));
-            mMediaPlayer.start();
+            return MediaPlayer.create(this,Uri.parse(song.getmPath()));
         }else{
-            mMediaPlayer = MediaPlayer.create(this,Uri.parse(song.getmPath()));
-            mMediaPlayer.start();
-        }
-        int duration = mMediaPlayer.getDuration();
-        int currentPosition = mMediaPlayer.getCurrentPosition();
-        mSeekBar.setMax(duration);
-        if(currentPosition==0){
-
-            mTimeSong.setText(millisecondsToString(duration));
-        }else if(currentPosition==duration){
-            //TODO chay lai hoac next
-            mMediaPlayer.pause();
-        }
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress=0;
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progressVulue, boolean fromUser) {
-                progress=progressVulue;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mMediaPlayer.seekTo(progress);
-                mMediaPlayer.start();
-            }
-        });
-        // Tạo một thread để update trạng thái của SeekBar.
-        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
-        threadHandler.postDelayed(updateSeekBarThread,50);
-
-    }
-    // Chuyển số lượng milli giây thành một String có ý nghĩa.
-    private String millisecondsToString(int milliseconds)  {
-        long minutes = (milliseconds / 1000) / 60;
-        long seconds = (milliseconds / 1000) % 60;
-        return minutes+":"+ seconds;
-    }
-    // Thread sử dụng để Update trạng thái cho SeekBar.
-    class UpdateSeekBarThread implements Runnable {
-
-        public void run()  {
-            int currentPosition = mMediaPlayer.getCurrentPosition();
-            mTimeCurrenSong.setText(millisecondsToString(currentPosition));
-
-            mSeekBar.setProgress(currentPosition);
-
-            // Ngừng thread 50 mili giây.
-            threadHandler.postDelayed(this, 50);
+            return MediaPlayer.create(this,Uri.parse(song.getmPath()));
         }
     }
     /**********************************************/
