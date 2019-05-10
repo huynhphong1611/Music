@@ -65,15 +65,4 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin"
         android:src="@drawable/ic_menu_moreoverflow_small_normal" />
-    <com.bkav.android.music.expandablerecycleview.ExpandableLinearLayout
-        android:id="@+id/expandableView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_song_layout_height"
-        app:expandDuration="500"
-        android:visibility="gone"
-        >
-        <include
-            layout="@layout/item_song"
-            />
-    </com.bkav.android.music.expandablerecycleview.ExpandableLinearLayout>
 </LinearLayout>

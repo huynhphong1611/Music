@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.ArtistsAdapter;
@@ -21,7 +22,7 @@ import com.bkav.android.music.adapter.ArtistsAdapter;
 public class FragmentArtists extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER_ARTIST=1;
     final static int ID_LOADER_ALBUM=2;
-    private RecyclerView mRecyclerViewArtists;
+    private ExpandableListView mExpandableListViewArtists;
     private ArtistsAdapter mArtistsAdapter;
     private CursorLoader mCursorLoaderArtists;
     private CursorLoader mCursorLoaderAlbum;
@@ -34,6 +35,8 @@ public class FragmentArtists extends Fragment implements LoaderManager.LoaderCal
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(ID_LOADER_ARTIST,null,this);
     }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -44,14 +47,8 @@ public class FragmentArtists extends Fragment implements LoaderManager.LoaderCal
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_nghe_si,container,false);
-        mRecyclerViewArtists=(RecyclerView) view.findViewById(R.id.recycler_view_artists);
-        mRecyclerViewArtists.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
-                ,LinearLayoutManager.VERTICAL,false);
-        mRecyclerViewArtists.setLayoutManager(linearLayoutManager);
-        //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
-        mArtistsAdapter=new ArtistsAdapter(null,getContext());
-        mRecyclerViewArtists.setAdapter(mArtistsAdapter);
+        mExpandableListViewArtists = (ExpandableListView) view.findViewById(R.id.expand_list_view_artists);
+
         return view;
     }
 

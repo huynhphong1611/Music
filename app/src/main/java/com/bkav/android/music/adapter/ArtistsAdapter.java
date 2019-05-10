@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 
 import com.bkav.android.music.R;
@@ -26,83 +27,27 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-public class ArtistsAdapter extends BaseCursorAdapter<ArtistsAdapter.ViewHolder>  {
+import java.util.HashMap;
+
+public class ArtistsAdapter extends SimpleCursorTreeAdapter {
     private Context mContext;
-    private int mLastExpandedCardPosition;
+    private Cursor mCursorHeader;
+    private HashMap<Integer, Integer> mCursorHashMapChild;
 
-    public ArtistsAdapter(Cursor c, Context mContext) {
-        super(c);
+    public ArtistsAdapter(Context context, Cursor cursor, int collapsedGroupLayout, int expandedGroupLayout, String[] groupFrom, int[] groupTo, int childLayout, int lastChildLayout, String[] childFrom, int[] childTo, Context mContext, Cursor mCursorHeader, HashMap<Integer, Integer> mCursorHashMapChild) {
+        super(context, cursor, collapsedGroupLayout, expandedGroupLayout, groupFrom, groupTo, childLayout, lastChildLayout, childFrom, childTo);
         this.mContext = mContext;
+        this.mCursorHeader = mCursorHeader;
+        this.mCursorHashMapChild = mCursorHashMapChild;
     }
 
     @Override
-    public void onBindViewHolder(final ArtistsAdapter.ViewHolder holder, Cursor cursor) {
-        //khoi tao imageLoader
-        final ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
-
-
-        if (cursor != null) {
-            String nameAlbum =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST));
-            String numAlbum=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS));
-            holder.txtNameArtists.setText(nameAlbum);
-            holder.countAlbum.setText(numAlbum+" albums");
-            imageLoader.displayImage(takeImgSong(cursor), holder.imgOne, new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(String imageUri, View view) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.unknown_artists);
-                    holder.gridLayout.setBackground(new BitmapDrawable(bitmap));
-                }
-
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.unknown_artists);
-                    holder.gridLayout.setBackground(new BitmapDrawable(bitmap));
-                }
-
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    holder.imgOne.setImageBitmap(loadedImage);
-                }
-
-                @Override
-                public void onLoadingCancelled(String imageUri, View view) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.unknown_artists);
-                    holder.gridLayout.setBackground(new BitmapDrawable(bitmap));
-                }
-            });
-            imageLoader.loadImage(takeImgSong(cursor), new SimpleImageLoadingListener(){
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    holder.imgTwo.setImageBitmap(loadedImage);
-                }
-            });
-            imageLoader.loadImage(takeImgSong(cursor), new SimpleImageLoadingListener(){
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    holder.imgThree.setImageBitmap(loadedImage);
-                }
-            });
-            imageLoader.loadImage(takeImgSong(cursor), new SimpleImageLoadingListener(){
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    holder.imgFour.setImageBitmap(loadedImage);
-                }
-            });
-
-        }
-    }
-
-    @Override
-    public ArtistsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
-        final View itemView = layoutInflater.inflate(R.layout.item_artists, viewGroup, false);
-        return new ArtistsAdapter.ViewHolder(itemView);
-    }
-
-    @Override
-    public void swapCursor(Cursor newCursor) {
-        super.swapCursor(newCursor);
+    protected Cursor getChildrenCursor(Cursor groupCursor) {
+        int groupPos = groupCursor.getPosition();
+        int groupId = groupCursor.getInt((groupCursor.getColumnIndexOrThrow
+                (MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)));
+        mCursorHashMapChild.put(groupId, groupPos);
+        return null;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
