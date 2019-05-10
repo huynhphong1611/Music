@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.interfaces.ItemClickLIstenerRecyclerView;
 import com.bkav.android.music.interfaces.ItemClickListenerSong;
 import com.bkav.android.music.object.Song;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -55,11 +56,11 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                     holder.imgSong.setImageBitmap(loadedImage);
                 }
             });
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.setItemClickLIstenerRecyclerView(new ItemClickLIstenerRecyclerView() {
                 @Override
-                public void onClick(View v) {
-                        Toast.makeText(mContext, holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                public void onClick(View v, int position) {
+                    Song song=getSongItem(position);
+                    Toast.makeText(mContext, song.getmNameSong(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -87,17 +88,27 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
         super.swapCursor(newCursor);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtNameSong, txtNameSinger;
         ImageView imgSong, imgMenu;
+        ItemClickLIstenerRecyclerView itemClickLIstenerRecyclerView;
         public ViewHolder(View itemView) {
             super(itemView);
             txtNameSong = (TextView) itemView.findViewById(R.id.txt_name_song);
             txtNameSinger = (TextView) itemView.findViewById(R.id.txt_name_singer);
             imgSong = (ImageView) itemView.findViewById(R.id.img_song);
             imgMenu = (ImageView) itemView.findViewById(R.id.img_menu_song);
+            itemView.setOnClickListener(this);
         }
 
+        public void setItemClickLIstenerRecyclerView(ItemClickLIstenerRecyclerView itemClickLIstenerRecyclerView) {
+            this.itemClickLIstenerRecyclerView = itemClickLIstenerRecyclerView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemClickLIstenerRecyclerView.onClick(v,getAdapterPosition());
+        }
     }
 
     //lấy ảnh từ ablum ra thêm vào list

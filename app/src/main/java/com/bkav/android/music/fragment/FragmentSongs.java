@@ -47,16 +47,6 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_bai_hat,container,false);
         mRecyclerViewSongs=(RecyclerView) view.findViewById(R.id.recycler_view_songs);
-        /***set su kien click item cua recyccler view***/
-        mRecyclerViewSongs.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerViewSongs
-                , new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-
-            }
-        }));
-
-        /***********************************************/
         mRecyclerViewSongs.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
                 ,LinearLayoutManager.VERTICAL,false);
