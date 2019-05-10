@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +69,9 @@ public class MainActivity extends AppCompatActivity
     private TextView mNameSong;
     private TextView mNameSinger;
     private Toolbar mToolbar;
+    private SeekBar mSeekBar;
     private int mTempLoop;
+    private MediaPlayer mMediaPlayer;
 
 
     @Override
@@ -113,7 +117,8 @@ public class MainActivity extends AppCompatActivity
         mNameSinger = (TextView)findViewById(R.id.txt_name_singer_play);
         mImgSongSmall =(ImageView) findViewById(R.id.image_view_song);
         mImgSongFull= (LinearLayout) findViewById(R.id.layout_img_background);
-
+        mSeekBar = (SeekBar) findViewById(R.id.seek_bar_time_play);
+        mMediaPlayer =new MediaPlayer();
     }
     @Override
     protected void onResume() {
@@ -290,10 +295,13 @@ public class MainActivity extends AppCompatActivity
                 if (mPLay.isSelected()) {
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_light));
-                    //TODO bat nhac
-                } else
+                    //TODO chay tiep
+                } else{
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_light));
+                    mMediaPlayer.pause();
+                }
+
                 break;
             }
             case R.id.image_play_song:{
@@ -301,11 +309,14 @@ public class MainActivity extends AppCompatActivity
 
                 if (mPLayFull.isSelected()) {
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
-                            .getDrawable(R.drawable.ic_media_play_dark));
-                    //TODO bat nhac
-                } else
-                    mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_dark));
+                    //TODO bat nhac
+                } else{
+                    mPLayFull.setImageDrawable(getBaseContext().getResources()
+                            .getDrawable(R.drawable.ic_media_play_dark));
+                    mMediaPlayer.pause();
+                }
+
                 break;
             }
             case R.id.image_loop_song:{
@@ -373,7 +384,10 @@ public class MainActivity extends AppCompatActivity
         mNameSinger.setText(song.getmNameSinger());
         mPLay.setImageDrawable(getBaseContext().getResources()
                 .getDrawable(R.drawable.ic_media_pause_light));
+        mPLayFull.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_pause_dark));
         mPLay.setSelected(true);
+        mPLayFull.setSelected(true);
         imageLoader.displayImage(song.getmAlbumArt(),mImgSongSmall);
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
@@ -381,6 +395,15 @@ public class MainActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+            mMediaPlayer = MediaPlayer.create(this,Uri.parse(song.getmPath()));
+            mMediaPlayer.start();
+        }else{
+            mMediaPlayer = MediaPlayer.create(this,Uri.parse(song.getmPath()));
+            mMediaPlayer.start();
+        }
+
     }
     /**********************************************/
 }
