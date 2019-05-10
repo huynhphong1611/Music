@@ -21,6 +21,8 @@
        android:layout_height="match_parent">
    </FrameLayout>
     <!-- SLIDING LAYOUT -->
-    <include layout="@layout/sliding_layout">
+    <include
+
+        layout="@layout/sliding_layout">
     </include>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

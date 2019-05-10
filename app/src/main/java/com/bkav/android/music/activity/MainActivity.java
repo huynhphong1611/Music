@@ -2,8 +2,13 @@ package com.bkav.android.music.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
@@ -27,12 +33,18 @@ import com.bkav.android.music.fragment.FragmentArtists;
 import com.bkav.android.music.fragment.FragmentPlaylists;
 import com.bkav.android.music.fragment.FragmentSongs;
 import com.bkav.android.music.interfaces.ItemClickListenerSong;
+import com.bkav.android.music.interfaces.OnSelectedListener;
 import com.bkav.android.music.object.Song;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.io.IOException;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener
-        ,SlidingUpPanelLayout.PanelSlideListener {
+        ,SlidingUpPanelLayout.PanelSlideListener, OnSelectedListener {
     final static String  LOG= "trang thai ";
     public static final int LOOP_SONG_OFF=1;
     public static final int LOOP_SONG_ALLLIST=2;
@@ -50,8 +62,13 @@ public class MainActivity extends AppCompatActivity
     private ImageView mPLayFull;
     private ImageView mPLayRandom;
     private ImageView mPlayLoop;
+    private ImageView mImgSongSmall;
+    private LinearLayout mImgSongFull;
+    private TextView mNameSong;
+    private TextView mNameSinger;
     private Toolbar mToolbar;
     private int mTempLoop;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +76,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         initPermission();
 
-        mPLay = (ImageView) findViewById(R.id.img_play);
-        mPLayFull = (ImageView) findViewById(R.id.image_play_song);
-        mPLayRandom = (ImageView) findViewById(R.id.image_random_song);
-        mPlayLoop = (ImageView) findViewById(R.id.image_loop_song);
-        mLinearLayoutPlayMusic = (LinearLayout) findViewById(R.id.view_list_and_menu);
-        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        init();
+        initFragmentArtists(R.string.artists);
+
 
         setSupportActionBar(mToolbar);
-        initFragmentArtists(R.string.artists);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -76,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //lang nghe onCLick
+        /*****lang nghe onCLick*********/
         mPLay.setOnClickListener(this);
         mPLayRandom.setOnClickListener(this);
         mPLayFull.setOnClickListener(this);
@@ -84,12 +97,28 @@ public class MainActivity extends AppCompatActivity
         mPlayLoop.setOnClickListener(this);
         mSlidingUpPanelLayout.addPanelSlideListener(this);
         /***********************************/
+
         Log.v(LOG,"onCreate");
+
+    }
+    public void init(){
+        mPLay = (ImageView) findViewById(R.id.img_play);
+        mPLayFull = (ImageView) findViewById(R.id.image_play_song);
+        mPLayRandom = (ImageView) findViewById(R.id.image_random_song);
+        mPlayLoop = (ImageView) findViewById(R.id.image_loop_song);
+        mLinearLayoutPlayMusic = (LinearLayout) findViewById(R.id.view_list_and_menu);
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mNameSong =(TextView)findViewById(R.id.txt_name_song_play);
+        mNameSinger = (TextView)findViewById(R.id.txt_name_singer_play);
+        mImgSongSmall =(ImageView) findViewById(R.id.image_view_song);
+        mImgSongFull= (LinearLayout) findViewById(R.id.layout_img_background);
 
     }
     @Override
     protected void onResume() {
         Log.v(LOG,"onResume");
+
         super.onResume();
     }
 
@@ -184,6 +213,7 @@ public class MainActivity extends AppCompatActivity
     private void initFraSongs(int titleActionBar) {
         setTitle(titleActionBar);
         mFragmentSongs = new FragmentSongs();
+        mFragmentSongs.setmOnSelectedListener(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment, mFragmentSongs);
@@ -335,5 +365,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onSelectedListener(Song song) {
+        ImageLoader imageLoader=ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
+        mNameSong.setText(song.getmNameSong());
+        mNameSinger.setText(song.getmNameSinger());
+        mPLay.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_pause_light));
+        mPLay.setSelected(true);
+        imageLoader.displayImage(song.getmAlbumArt(),mImgSongSmall);
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
+            mImgSongFull.setBackground(new BitmapDrawable(getResources(),bitmap));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**********************************************/
 }

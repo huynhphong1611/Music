@@ -21,17 +21,26 @@ import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.AlbumsAdapter;
 import com.bkav.android.music.adapter.SongsAdapter;
 import com.bkav.android.music.interfaces.ItemClickListenerSong;
+import com.bkav.android.music.interfaces.OnSelectedListener;
 import com.bkav.android.music.object.Song;
 
-public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,ItemClickListenerSong {
     final static int ID_LOADER=1;
     private CursorLoader mCursorLoader;
     private RecyclerView mRecyclerViewSongs;
     private SongsAdapter mSongsAdapter;
 
-    public interface OnSelectedListener{
-        public void onSelectedListener();
+    public void setmOnSelectedListener(OnSelectedListener mOnSelectedListener) {
+        this.mOnSelectedListener = mOnSelectedListener;
     }
+
+    private OnSelectedListener mOnSelectedListener;
+
+    @Override
+    public void takeSongFromAdapter(Song song) {
+        mOnSelectedListener.onSelectedListener(song);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -51,9 +60,9 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
                 ,LinearLayoutManager.VERTICAL,false);
         mRecyclerViewSongs.setLayoutManager(linearLayoutManager);
-
         //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
         mSongsAdapter=new SongsAdapter(null,getContext());
+        mSongsAdapter.setmItemClickListenerSong(this);
         mRecyclerViewSongs.setAdapter(mSongsAdapter);
         return view;
     }

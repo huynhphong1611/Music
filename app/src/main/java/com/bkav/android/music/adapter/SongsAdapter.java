@@ -26,8 +26,12 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     private Context mContext;
-
     private String mNameSong,mNameSinger,mPath,mAlbumArt,mTimeSong;
+    private ItemClickListenerSong mItemClickListenerSong;
+
+    public void setmItemClickListenerSong(ItemClickListenerSong mItemClickListenerSong) {
+        this.mItemClickListenerSong = mItemClickListenerSong;
+    }
 
     public SongsAdapter(Cursor c, Context mContext) {
         super(c);
@@ -60,6 +64,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v, int position) {
                     Song song=getSongItem(position);
+                    mItemClickListenerSong.takeSongFromAdapter(song);
                     Toast.makeText(mContext, song.getmNameSong(), Toast.LENGTH_SHORT).show();
                 }
             });
