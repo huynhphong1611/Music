@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -42,6 +43,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity
@@ -68,11 +70,13 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout mImgSongFull;
     private TextView mNameSong;
     private TextView mNameSinger;
+    private TextView mTimeSong;
+    private TextView mTimeCurrenSong;
     private Toolbar mToolbar;
     private SeekBar mSeekBar;
     private int mTempLoop;
     private MediaPlayer mMediaPlayer;
-
+    private Handler threadHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,8 @@ public class MainActivity extends AppCompatActivity
         mImgSongFull= (LinearLayout) findViewById(R.id.layout_img_background);
         mSeekBar = (SeekBar) findViewById(R.id.seek_bar_time_play);
         mMediaPlayer =new MediaPlayer();
+        mTimeSong = (TextView) findViewById(R.id.txt_time_end);
+        mTimeCurrenSong = (TextView) findViewById(R.id.txt_time_start);
     }
     @Override
     protected void onResume() {
@@ -286,7 +292,7 @@ public class MainActivity extends AppCompatActivity
     //thuc hien onClick cua cac phim play loop random
     @Override
     public void onClick(View v) {
-
+        int x=0;
         switch(v.getId()){
             case R.id.img_play:{
                 //nut play o sliding dang cuon
@@ -295,8 +301,15 @@ public class MainActivity extends AppCompatActivity
                 if (mPLay.isSelected()) {
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_light));
-                    //TODO chay tiep
+                    if(x!=0){
+                        mMediaPlayer.seekTo(x);
+                        mMediaPlayer.start();
+                    }else{
+
+                        mMediaPlayer.start();
+                    }
                 } else{
+                    x=mMediaPlayer.getCurrentPosition();
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_light));
                     mMediaPlayer.pause();
@@ -310,8 +323,15 @@ public class MainActivity extends AppCompatActivity
                 if (mPLayFull.isSelected()) {
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_dark));
-                    //TODO bat nhac
+                    if(x!=0){
+                        mMediaPlayer.seekTo(x);
+                        mMediaPlayer.start();
+                    }else{
+
+                        mMediaPlayer.start();
+                    }
                 } else{
+                    x=mMediaPlayer.getCurrentPosition();
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_dark));
                     mMediaPlayer.pause();
@@ -378,6 +398,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSelectedListener(Song song) {
+        threadHandler = new Handler();
+        /****************cho bai hat chạy*************/
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
         mNameSong.setText(song.getmNameSong());
@@ -403,7 +425,57 @@ public class MainActivity extends AppCompatActivity
             mMediaPlayer = MediaPlayer.create(this,Uri.parse(song.getmPath()));
             mMediaPlayer.start();
         }
+        int duration = mMediaPlayer.getDuration();
+        int currentPosition = mMediaPlayer.getCurrentPosition();
+        mSeekBar.setMax(duration);
+        if(currentPosition==0){
 
+            mTimeSong.setText(millisecondsToString(duration));
+        }else if(currentPosition==duration){
+            //TODO chay lai hoac next
+            mMediaPlayer.pause();
+        }
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress=0;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressVulue, boolean fromUser) {
+                progress=progressVulue;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mMediaPlayer.seekTo(progress);
+                mMediaPlayer.start();
+            }
+        });
+        // Tạo một thread để update trạng thái của SeekBar.
+        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+        threadHandler.postDelayed(updateSeekBarThread,50);
+
+    }
+    // Chuyển số lượng milli giây thành một String có ý nghĩa.
+    private String millisecondsToString(int milliseconds)  {
+        long minutes = (milliseconds / 1000) / 60;
+        long seconds = (milliseconds / 1000) % 60;
+        return minutes+":"+ seconds;
+    }
+    // Thread sử dụng để Update trạng thái cho SeekBar.
+    class UpdateSeekBarThread implements Runnable {
+
+        public void run()  {
+            int currentPosition = mMediaPlayer.getCurrentPosition();
+            mTimeCurrenSong.setText(millisecondsToString(currentPosition));
+
+            mSeekBar.setProgress(currentPosition);
+
+            // Ngừng thread 50 mili giây.
+            threadHandler.postDelayed(this, 50);
+        }
     }
     /**********************************************/
 }
