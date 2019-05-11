@@ -33,6 +33,10 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
         this.mItemClickListenerSong = mItemClickListenerSong;
     }
 
+    public SongsAdapter(Context mContext) {
+        this.mContext = mContext;
+    }
+
     public SongsAdapter(Cursor c, Context mContext) {
         super(c);
         this.mContext = mContext;

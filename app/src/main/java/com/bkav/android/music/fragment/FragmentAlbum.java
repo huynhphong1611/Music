@@ -44,9 +44,8 @@ public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallb
         mRecyclerViewAlbums.setLayoutManager(gridLayoutManager);
 //        AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(getContext(), 500);
 //        mRecyclerViewAlbums.setLayoutManager(layoutManager);
-        //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
-        mAlbumsAdapter=new AlbumsAdapter(null,getContext());
-        mRecyclerViewAlbums.setAdapter(mAlbumsAdapter);
+        mAlbumsAdapter=new AlbumsAdapter(getContext());
+
         return view;
     }
 
@@ -72,6 +71,7 @@ public class FragmentAlbum extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         mAlbumsAdapter.swapCursor(cursor);
+        mRecyclerViewAlbums.setAdapter(mAlbumsAdapter);
     }
 
     @Override

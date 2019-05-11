@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,10 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
 
     private Context mContext;
+
+    public AlbumsAdapter(Context mContext) {
+        this.mContext = mContext;
+    }
 
     public AlbumsAdapter(Cursor c, Context mContext) {
         super(c);
@@ -59,8 +64,10 @@ public class AlbumsAdapter extends BaseCursorAdapter<AlbumsAdapter.ViewHolder> {
         return new ViewHolder(itemView);
     }
     @Override
-    public void swapCursor(Cursor newCursor) {
-        super.swapCursor(newCursor);
+    public void swapCursor(Cursor newCursor){
+            super.swapCursor(newCursor);
+
+
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtNameAlbum,txtNameSinger;

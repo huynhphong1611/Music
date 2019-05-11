@@ -60,10 +60,9 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
                 ,LinearLayoutManager.VERTICAL,false);
         mRecyclerViewSongs.setLayoutManager(linearLayoutManager);
-        //chô này anh bảo null k can truyền tham số đầu vào nhưng nó là cursor em để tham so nó lỗi ạ//
-        mSongsAdapter=new SongsAdapter(null,getContext());
+        mSongsAdapter=new SongsAdapter(getContext());
         mSongsAdapter.setmItemClickListenerSong(this);
-        mRecyclerViewSongs.setAdapter(mSongsAdapter);
+
         return view;
     }
 
@@ -89,7 +88,7 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         mSongsAdapter.swapCursor(cursor);
-
+        mRecyclerViewSongs.setAdapter(mSongsAdapter);
     }
 
     @Override

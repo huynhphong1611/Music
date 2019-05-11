@@ -12,6 +12,10 @@ public abstract  class BaseCursorAdapter <V extends RecyclerView.ViewHolder> ext
 
     public abstract void onBindViewHolder(V holder, Cursor cursor);
 
+    public BaseCursorAdapter() {
+        this.mRowIDColumn = 0;
+    }
+
     public BaseCursorAdapter(Cursor c) {
         setHasStableIds(true);
         swapCursor(c);
