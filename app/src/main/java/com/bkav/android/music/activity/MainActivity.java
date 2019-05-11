@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity
     private MediaPlayer mMediaPlayer;
     private Handler threadHandler;
     private int mPositonSongCurren;
-    private int mDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,7 +308,6 @@ public class MainActivity extends AppCompatActivity
                             .getDrawable(R.drawable.ic_media_pause_light));
                     if(x!=0){
                         mMediaPlayer.seekTo(x);
-                        mMediaPlayer.start();
                     }else{
 
                         mMediaPlayer.start();
@@ -331,7 +329,6 @@ public class MainActivity extends AppCompatActivity
                             .getDrawable(R.drawable.ic_media_pause_dark));
                     if(x!=0){
                         mMediaPlayer.seekTo(x);
-                        mMediaPlayer.start();
                     }else{
 
                         mMediaPlayer.start();
@@ -409,9 +406,8 @@ public class MainActivity extends AppCompatActivity
         /****************cho bai hat chạy*************/
         mMediaPlayer=initInfoSonginSlidingLayout(song);
         mMediaPlayer.start();
-        mDuration= mMediaPlayer.getDuration();
-        mSeekBar.setMax(mDuration);
-        mTimeSong.setText(millisecondsToString(mDuration));
+        mSeekBar.setMax(mMediaPlayer.getDuration());
+        mTimeSong.setText(millisecondsToString(mMediaPlayer.getDuration()));
 
         // Tạo một thread để update trạng thái của SeekBar.
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
@@ -438,11 +434,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            mMediaPlayer.seekTo(progress);
-            if(progress==mDuration){
+            if(progress==mMediaPlayer.getDuration()){
                 nextWhileEndTime();
             }else{
-                mMediaPlayer.start();
+                mMediaPlayer.seekTo(progress);
             }
 
         }
