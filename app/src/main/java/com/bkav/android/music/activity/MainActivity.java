@@ -1,12 +1,9 @@
 package com.bkav.android.music.activity;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -38,7 +35,6 @@ import com.bkav.android.music.fragment.FragmentAlbum;
 import com.bkav.android.music.fragment.FragmentArtists;
 import com.bkav.android.music.fragment.FragmentPlaylists;
 import com.bkav.android.music.fragment.FragmentSongs;
-import com.bkav.android.music.interfaces.ItemClickListenerSong;
 import com.bkav.android.music.interfaces.OnSelectedListener;
 import com.bkav.android.music.object.Song;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -46,7 +42,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity
@@ -411,7 +406,7 @@ public class MainActivity extends AppCompatActivity
 
         // Tạo một thread để update trạng thái của SeekBar.
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
-        threadHandler.postDelayed(updateSeekBarThread,50);
+        threadHandler.postDelayed(updateSeekBarThread,1000);
 
     }
     // Chuyển số lượng milli giây thành một String có ý nghĩa.
@@ -425,6 +420,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onProgressChanged(SeekBar seekBar, int progressVulue, boolean fromUser) {
             progress=progressVulue;
+
         }
 
         @Override
@@ -439,36 +435,38 @@ public class MainActivity extends AppCompatActivity
             }else{
                 mMediaPlayer.seekTo(progress);
             }
-
         }
     /****************************/
     // Thread sử dụng để Update trạng thái cho SeekBar.
     class UpdateSeekBarThread implements Runnable {
 
         public void run()  {
-            int currentPosition = mMediaPlayer.getCurrentPosition();
-            mTimeCurrenSong.setText(millisecondsToString(currentPosition));
+            String currentPosition = millisecondsToString(mMediaPlayer.getCurrentPosition());
+            mTimeCurrenSong.setText(currentPosition);
 
-            mSeekBar.setProgress(currentPosition);
-
+            mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
+            if(currentPosition.equals(millisecondsToString(mMediaPlayer.getDuration()))){
+                nextWhileEndTime();
+            }
+            Log.v(LOG+"curren: ", String.valueOf(currentPosition));
+            Log.v(LOG+"end: ", String.valueOf(mMediaPlayer.getDuration()));
             // Ngừng thread 50 mili giây.
-            threadHandler.postDelayed(this, 50);
-
+            threadHandler.postDelayed(this, 1000);
         }
+
     }
     /*ham chuyen bai khi chay het*/
     public void nextWhileEndTime(){
-
             //TODO chay lai hoac next
             /*next*/
             mPositonSongCurren++;
             Song songNext=SongsAdapter.getSongItem(mPositonSongCurren);
             mMediaPlayer=initInfoSonginSlidingLayout(songNext);
             mMediaPlayer.start();
-            Log.v(LOG,"end");
+            mTimeCurrenSong.setText("0:0");
+            mSeekBar.setProgress(0);
             mSeekBar.setMax(mMediaPlayer.getDuration());
             mTimeSong.setText(millisecondsToString(mMediaPlayer.getDuration()));
-
 
     }
     /*ham init thong thin bai hat len Sliding layout*/
