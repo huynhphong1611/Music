@@ -1,19 +1,31 @@
 package com.bkav.android.music.activity;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,7 +37,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +50,7 @@ import com.bkav.android.music.fragment.FragmentArtists;
 import com.bkav.android.music.fragment.FragmentPlaylists;
 import com.bkav.android.music.fragment.FragmentSongs;
 import com.bkav.android.music.interfaces.OnSelectedListener;
+import com.bkav.android.music.object.MyPlayer;
 import com.bkav.android.music.object.Song;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -51,7 +66,10 @@ public class MainActivity extends AppCompatActivity
     public static final int LOOP_SONG_OFF=1;
     public static final int LOOP_SONG_ALLLIST=2;
     public static final int LOOP_SONG_PRESENT=3;
+    private static final String EXTRA_BUTTON_CLICKED = "click_play_noyification";
     public static int MY_PERMISSIONS_REQUEST = 1;
+    private static final String CHANNEL_ID = "PLAY_MUSIC";
+    private static  final int NOTIFICATION_ID=1;
     public static int[] NUMBER_MY_PERMISSIONS_REQUEST = {0, 1};
     public static String TAG = "trang thai";
     private FragmentArtists mFragmentArtists;
@@ -73,9 +91,14 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private SeekBar mSeekBar;
     private int mTempLoop;
-    private MediaPlayer mMediaPlayer;
+    //private MediaPlayer mMediaPlayer;
     private Handler threadHandler;
     private int mPositonSongCurren;
+    /*khai bao notification*/
+    private NotificationCompat.Builder mBuilder;
+    private NotificationManager mNotificationManager;
+    private MyPlayer mMyPlayer;
+    private RemoteViews mRemoteViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +145,13 @@ public class MainActivity extends AppCompatActivity
         mImgSongSmall =(ImageView) findViewById(R.id.image_view_song);
         mImgSongFull= (LinearLayout) findViewById(R.id.layout_img_background);
         mSeekBar = (SeekBar) findViewById(R.id.seek_bar_time_play);
-        mMediaPlayer =new MediaPlayer();
+        mMyPlayer =new MyPlayer();
         mTimeSong = (TextView) findViewById(R.id.txt_time_end);
         mTimeCurrenSong = (TextView) findViewById(R.id.txt_time_start);
+        /*notification*/
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mRemoteViews = new RemoteViews(getPackageName(),R.layout.activity_notification);
+
     }
     @Override
     protected void onResume() {
@@ -302,16 +329,16 @@ public class MainActivity extends AppCompatActivity
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_light));
                     if(x!=0){
-                        mMediaPlayer.seekTo(x);
+                        mMyPlayer.fastForward(x);
                     }else{
 
-                        mMediaPlayer.start();
+                        mMyPlayer.play();
                     }
                 } else{
-                    x=mMediaPlayer.getCurrentPosition();
+                    x=mMyPlayer.getmMediaPlayer().getCurrentPosition();
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_light));
-                    mMediaPlayer.pause();
+                    mMyPlayer.pause();
                 }
 
                 break;
@@ -323,16 +350,16 @@ public class MainActivity extends AppCompatActivity
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_dark));
                     if(x!=0){
-                        mMediaPlayer.seekTo(x);
+                        mMyPlayer.fastForward(x);
                     }else{
 
-                        mMediaPlayer.start();
+                        mMyPlayer.play();
                     }
                 } else{
-                    x=mMediaPlayer.getCurrentPosition();
+                    x=mMyPlayer.getmMediaPlayer().getCurrentPosition();
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_dark));
-                    mMediaPlayer.pause();
+                    mMyPlayer.pause();
                 }
 
                 break;
@@ -393,17 +420,16 @@ public class MainActivity extends AppCompatActivity
             mLinearLayoutPlayMusic.setVisibility(View.GONE);
         }
     }
-
+    /*ban bai hat tu fragment sang*/
     @Override
     public void onSelectedListener(Song song,  int position) {
         mPositonSongCurren=position;
         threadHandler = new Handler();
         /****************cho bai hat chạy*************/
-        mMediaPlayer=initInfoSonginSlidingLayout(song);
-        mMediaPlayer.start();
-        mSeekBar.setMax(mMediaPlayer.getDuration());
-        mTimeSong.setText(millisecondsToString(mMediaPlayer.getDuration()));
-
+        initInfoSonginSlidingLayout(song);
+        mMyPlayer.play();
+        mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
+        mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
         // Tạo một thread để update trạng thái của SeekBar.
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
         threadHandler.postDelayed(updateSeekBarThread,1000);
@@ -430,10 +456,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            if(progress==mMediaPlayer.getDuration()){
-                nextWhileEndTime();
+            if(progress==mMyPlayer.getmMediaPlayer().getDuration()){
+                nextSong();
             }else{
-                mMediaPlayer.seekTo(progress);
+                mMyPlayer.fastForward(progress);
             }
         }
     /****************************/
@@ -441,36 +467,44 @@ public class MainActivity extends AppCompatActivity
     class UpdateSeekBarThread implements Runnable {
 
         public void run()  {
-            String currentPosition = millisecondsToString(mMediaPlayer.getCurrentPosition());
+            String currentPosition = millisecondsToString(mMyPlayer.getmMediaPlayer().getCurrentPosition());
             mTimeCurrenSong.setText(currentPosition);
-
-            mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
-            if(currentPosition.equals(millisecondsToString(mMediaPlayer.getDuration()))){
-                nextWhileEndTime();
+            mSeekBar.setProgress(mMyPlayer.getmMediaPlayer().getCurrentPosition());
+            if(currentPosition.equals(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()))){
+                nextSong();
             }
             Log.v(LOG+"curren: ", String.valueOf(currentPosition));
-            Log.v(LOG+"end: ", String.valueOf(mMediaPlayer.getDuration()));
+            Log.v(LOG+"end: ", String.valueOf(mMyPlayer.getmMediaPlayer().getDuration()));
             // Ngừng thread 50 mili giây.
             threadHandler.postDelayed(this, 1000);
         }
 
     }
     /*ham chuyen bai khi chay het*/
-    public void nextWhileEndTime(){
+    public void nextSong(){
             //TODO chay lai hoac next
             /*next*/
             mPositonSongCurren++;
+            mMyPlayer.end();
             Song songNext=SongsAdapter.getSongItem(mPositonSongCurren);
-            mMediaPlayer=initInfoSonginSlidingLayout(songNext);
-            mMediaPlayer.start();
+            initInfoSonginSlidingLayout(songNext);
+            mMyPlayer.play();
             mTimeCurrenSong.setText("0:0");
             mSeekBar.setProgress(0);
-            mSeekBar.setMax(mMediaPlayer.getDuration());
-            mTimeSong.setText(millisecondsToString(mMediaPlayer.getDuration()));
+            mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
+            mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
 
     }
     /*ham init thong thin bai hat len Sliding layout*/
-    public MediaPlayer initInfoSonginSlidingLayout(Song song){
+    public void initInfoSonginSlidingLayout(Song song){
+        if(mMyPlayer!=null)
+        {
+            mMyPlayer.end();
+            mMyPlayer = new MyPlayer(this,song.getmPath());
+        }else{
+            mMyPlayer = new MyPlayer(this,song.getmPath());
+        }
+
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
         mNameSong.setText(song.getmNameSong());
@@ -485,15 +519,61 @@ public class MainActivity extends AppCompatActivity
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
             mImgSongFull.setBackground(new BitmapDrawable(getResources(),bitmap));
+            /*show notification*/
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(mMediaPlayer.isPlaying()){
-            mMediaPlayer.pause();
-            return MediaPlayer.create(this,Uri.parse(song.getmPath()));
+        if(mMyPlayer.getmMediaPlayer().isPlaying()){
+            mMyPlayer.pause();
+            showNotification(song);
+
         }else{
-            return MediaPlayer.create(this,Uri.parse(song.getmPath()));
+            showNotification(song);
         }
+
     }
     /**********************************************/
+    /*Notification*/
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    public void showNotification(Song song){
+        createNotificationChannel();
+        Bitmap bitmap=null;
+        mBuilder=new NotificationCompat.Builder(this,CHANNEL_ID)
+                .setColor(ContextCompat.getColor(this,R.color.colorWhite))
+                .setSmallIcon(R.drawable.ic_fab_play_btn_normal)
+                .setCustomContentView(mRemoteViews);
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(bitmap==null){
+            mRemoteViews.setImageViewResource(R.id.img_song_notification,R.drawable.unknown_albums);
+        }else{
+            mRemoteViews.setImageViewBitmap(R.id.img_song_notification,bitmap);
+        }
+
+        mRemoteViews.setImageViewResource(R.id.image_pre_song_notification,R.drawable.ic_rew_dark);
+        mRemoteViews.setImageViewResource(R.id.image_next_song_notification,R.drawable.ic_fwd_dark);
+        mRemoteViews.setImageViewResource(R.id.image_play_song_notification,R.drawable.ic_media_pause_dark);
+        mRemoteViews.setTextViewText(R.id.txt_name_song_notification, song.getmNameSong());
+        mRemoteViews.setTextViewText(R.id.txt_name_singer_notification, song.getmNameSinger());
+        mNotificationManager.notify(NOTIFICATION_ID,mBuilder.build());
+    }
 }

@@ -26,6 +26,7 @@
     <!--object Song-->
     <string name="name_song">Tên bài hát</string>
     <string name="name_singer">Tên sa sĩ</string>
+    <string name="name_album">Ten Album</string>
     <string name="count_album">0 Album</string>
     <string name="count_song">0 Bài hát</string>
     <!--layout nghe ngay-->
@@ -37,4 +38,7 @@
     <string name="off_random_play">Tắt tính năng phát ngẫu nhiên</string>
     <string name="on_random_play">Bật tính năng phát ngẫu nhiên</string>
     <string name="thongbao">Phần nghệ sĩ đang hoàn thiện. Mời bạn đến tab nghe nhạc</string>
+    <!--notification-->
+    <string name="channel_name">play music</string>
+    <string name="channel_description">choi nhac</string>
 </resources>

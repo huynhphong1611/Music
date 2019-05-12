@@ -8,18 +8,34 @@ public class MyPlayer {
     private MediaPlayer mMediaPlayer;
     private Context mContext;
     private String mPath;
-    public MyPlayer(Context mContext,String mPath) {
-        this.mContext = mContext;
-        this.mMediaPlayer=MediaPlayer.create(mContext, Uri.parse(this.mPath=mPath));
+
+    public MediaPlayer getmMediaPlayer() {
+        return mMediaPlayer;
     }
+
+    public MyPlayer() {
+    }
+
+    public MyPlayer(Context mContext, String mPath) {
+        this.mContext = mContext;
+        this.mMediaPlayer = MediaPlayer.create(mContext, Uri.parse(this.mPath = mPath));
+    }
+
     // Tua bài hát (phát tiếp bài hát từ vị trí pos trở đi)
-    public void fastForward(int pos){
+    public void fastForward(int pos) {
         mMediaPlayer.seekTo(pos);
     }
+
     // phát nhạc
     public void play() {
         if (mMediaPlayer != null) {
             mMediaPlayer.start();
+        }
+    }
+
+    public void pause() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.pause();
         }
     }
 
@@ -29,5 +45,13 @@ public class MyPlayer {
             mMediaPlayer.stop();
         }
     }
+
+    //end huy mediplayer
+    public void end() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+        }
+    }
+
 
 }

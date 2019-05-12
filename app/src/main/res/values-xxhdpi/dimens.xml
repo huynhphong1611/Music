@@ -35,6 +35,12 @@
     <dimen name="item_song_layout_height">64dp</dimen>
     <dimen name="img_grid">24dp</dimen>
     <!--********************************-->
+    <!--******notification****-->
+    <dimen name="height_notificaion">64dp</dimen>
+    <dimen name="margin_notification">15dp</dimen>
+    <dimen name="margin_notification_play">10dp</dimen>
+    <dimen name="text_size_name_song_notification">18sp</dimen>
+    <!--**********************-->
 
     <!--size text-->
     <dimen name="text_size_name_song">16sp</dimen>
