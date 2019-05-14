@@ -15,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
@@ -26,12 +28,12 @@ import com.bkav.android.music.object.Song;
 
 import java.util.List;
 
-public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,ItemClickListenerSong {
+public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,ItemClickListenerSong,View.OnClickListener {
     final static int ID_LOADER=1;
     private CursorLoader mCursorLoader;
     private RecyclerView mRecyclerViewSongs;
     private SongsAdapter mSongsAdapter;
-
+    private ImageView mPlayRamdom;
     public void setmOnSelectedListener(OnSelectedListener mOnSelectedListener) {
         this.mOnSelectedListener = mOnSelectedListener;
     }
@@ -57,11 +59,13 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_bai_hat,container,false);
+        mPlayRamdom = (ImageView) view.findViewById(R.id.img_phat_ngau_nhien);
         mRecyclerViewSongs=(RecyclerView) view.findViewById(R.id.recycler_view_songs);
         mRecyclerViewSongs.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(view.getContext()
                 ,LinearLayoutManager.VERTICAL,false);
         mRecyclerViewSongs.setLayoutManager(linearLayoutManager);
+        mPlayRamdom.setOnClickListener(this);
         mSongsAdapter=new SongsAdapter(getContext());
         mSongsAdapter.setmItemClickListenerSong(this);
         return view;
@@ -95,5 +99,15 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mSongsAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.img_phat_ngau_nhien:{
+                Toast.makeText(getContext(), R.string.click_phat_ngau_nhien, Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
     }
 }

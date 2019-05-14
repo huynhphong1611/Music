@@ -453,10 +453,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             }
-            case R.id.img_phat_ngau_nhien:{
-                Toast.makeText(this, R.string.click_phat_ngau_nhien, Toast.LENGTH_SHORT).show();
-                break;
-            }
+
         }
     }
 

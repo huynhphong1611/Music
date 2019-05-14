@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.interfaces.ClickPlaySongRandom;
 import com.bkav.android.music.interfaces.ItemClickLIstenerRecyclerView;
 import com.bkav.android.music.interfaces.ItemClickListenerSong;
 import com.bkav.android.music.object.Song;
@@ -86,6 +87,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 }
             });
 
+
         }
     }
     public static Song getSongItem(int position){
@@ -111,6 +113,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     public void swapCursor(Cursor newCursor) {
         super.swapCursor(newCursor);
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtNameSong, txtNameSinger;

@@ -39,7 +39,7 @@
     <string name="on_random_play">Bật tính năng phát ngẫu nhiên</string>
     <string name="thongbao">Phần nghệ sĩ đang hoàn thiện. Mời bạn đến tab nghe nhạc</string>
     <string name="phat_ngau_nhien">Phát ngẫu nhiên tất cả</string>
-    <string name="click_phat_ngau_nhien">Đang hoàn thiện anh có thể chọn tính nắng này trong SlidingLayoput</string>
+    <string name="click_phat_ngau_nhien">Đang hoàn thiện anh có thể chọn tính năng này trong Sliding Layout</string>
     <!--notification-->
     <string name="channel_name">play music</string>
     <string name="channel_description">choi nhac</string>
