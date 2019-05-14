@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bkav.android.music.R;
+import com.bkav.android.music.adapter.BaseCursorAdapter;
 import com.bkav.android.music.adapter.SongsAdapter;
 import com.bkav.android.music.fragment.FragmentAlbum;
 import com.bkav.android.music.fragment.FragmentArtists;
@@ -78,10 +80,13 @@ public class MainActivity extends AppCompatActivity
     private FragmentPlaylists mFragmentPlaylists;
     private LinearLayout mLinearLayoutPlayMusic;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
+    private Cursor mCursor;
     private ImageView mPLay;
     private ImageView mPLayFull;
     private ImageView mPLayRandom;
     private ImageView mPlayLoop;
+    private ImageView mNextSong;
+    private ImageView mPreSong;
     private ImageView mImgSongSmall;
     private LinearLayout mImgSongFull;
     private TextView mNameSong;
@@ -123,6 +128,8 @@ public class MainActivity extends AppCompatActivity
         mPLay.setOnClickListener(this);
         mPLayRandom.setOnClickListener(this);
         mPLayFull.setOnClickListener(this);
+        mNextSong.setOnClickListener(this);
+        mPreSong.setOnClickListener(this);
         mTempLoop = 1;
         mPlayLoop.setOnClickListener(this);
         mSlidingUpPanelLayout.addPanelSlideListener(this);
@@ -137,6 +144,8 @@ public class MainActivity extends AppCompatActivity
         mPLayFull = (ImageView) findViewById(R.id.image_play_song);
         mPLayRandom = (ImageView) findViewById(R.id.image_random_song);
         mPlayLoop = (ImageView) findViewById(R.id.image_loop_song);
+        mNextSong = (ImageView) findViewById(R.id.image_next_song);
+        mPreSong =(ImageView) findViewById(R.id.image_pre_song);
         mLinearLayoutPlayMusic = (LinearLayout) findViewById(R.id.view_list_and_menu);
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -364,6 +373,14 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             }
+            case R.id.image_next_song:{
+                nextSong();
+                break;
+            }
+            case R.id.image_pre_song:{
+                preSong();
+                break;
+            }
             case R.id.image_loop_song:{
                 mTempLoop += 1;
                 if (mTempLoop >= 1 || mTempLoop <= 3) {
@@ -422,11 +439,13 @@ public class MainActivity extends AppCompatActivity
     }
     /*ban bai hat tu fragment sang*/
     @Override
-    public void onSelectedListener(Song song,  int position) {
+    public void onSelectedListener(Cursor cursor,  int position) {
+        mCursor=cursor;
+
         mPositonSongCurren=position;
         threadHandler = new Handler();
         /****************cho bai hat chạy*************/
-        initInfoSonginSlidingLayout(song);
+        initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
         mMyPlayer.play();
         mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
         mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
@@ -434,6 +453,30 @@ public class MainActivity extends AppCompatActivity
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
         threadHandler.postDelayed(updateSeekBarThread,1000);
 
+    }
+    //lay bai hat tu cursor
+    public Song takeSong(int position){
+        int currenCursor=0;
+        if(mCursor!=null){
+            if(mCursor.moveToFirst()){
+                do{
+                    if(currenCursor==position){
+                        Song song=new Song (mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
+                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
+                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
+                                ,0
+                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
+                                ,null
+                                ,SongsAdapter.takeURIImgSong(mCursor),null);
+                        return song;
+                    }
+                    currenCursor++;
+                }while(mCursor.moveToNext());
+            }
+        }
+
+
+        return null;
     }
     // Chuyển số lượng milli giây thành một String có ý nghĩa.
     private String millisecondsToString(int milliseconds)  {
@@ -484,16 +527,34 @@ public class MainActivity extends AppCompatActivity
     public void nextSong(){
             //TODO chay lai hoac next
             /*next*/
-            mPositonSongCurren++;
+            if(mPositonSongCurren==SongsAdapter.sCount){
+                mPositonSongCurren=0;
+            }else{
+                mPositonSongCurren++;
+            }
             mMyPlayer.end();
-            Song songNext=SongsAdapter.getSongItem(mPositonSongCurren);
-            initInfoSonginSlidingLayout(songNext);
+            initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
             mMyPlayer.play();
             mTimeCurrenSong.setText("0:0");
             mSeekBar.setProgress(0);
             mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
             mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
 
+    }
+    public void preSong(){
+        if(mPositonSongCurren==0){
+            mPositonSongCurren=mCursor.getCount()-1;
+        }else{
+            mPositonSongCurren--;
+        }
+        mMyPlayer.end();
+
+        initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
+        mMyPlayer.play();
+        mTimeCurrenSong.setText("0:0");
+        mSeekBar.setProgress(0);
+        mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
+        mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
     }
     /*ham init thong thin bai hat len Sliding layout*/
     public void initInfoSonginSlidingLayout(Song song){

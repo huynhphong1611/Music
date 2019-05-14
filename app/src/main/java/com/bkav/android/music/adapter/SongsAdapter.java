@@ -28,7 +28,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     private Context mContext;
     private String mNameSong,mNameSinger,mPath,mAlbumArt,mTimeSong;
     private ItemClickListenerSong mItemClickListenerSong;
-
+    public static int sCount;
     public void setmItemClickListenerSong(ItemClickListenerSong mItemClickListenerSong) {
         this.mItemClickListenerSong = mItemClickListenerSong;
     }
@@ -47,6 +47,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
         if (cursor != null) {
+            sCount=cursor.getCount()-1;
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
             mNameSong = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
             mNameSinger = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
@@ -68,7 +69,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v, int position) {
                     Song song=getSongItem(position);
-                    mItemClickListenerSong.takeSongFromAdapter(song,position);
+                    mItemClickListenerSong.takeSongFromAdapter(cursor,position);
                     Toast.makeText(mContext, song.getmNameSong(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -85,6 +86,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 ,takeURIImgSong(cursor),null);
         return song;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());

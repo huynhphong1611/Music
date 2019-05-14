@@ -37,8 +37,8 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     private OnSelectedListener mOnSelectedListener;
 
     @Override
-    public void takeSongFromAdapter(Song song,int positon) {
-        mOnSelectedListener.onSelectedListener(song,positon);
+    public void takeSongFromAdapter(Cursor cursor,int positon) {
+        mOnSelectedListener.onSelectedListener(cursor,positon);
     }
 
     @Override
