@@ -420,6 +420,10 @@ public class MainActivity extends AppCompatActivity
                             break;
                         }
                         case LOOP_SONG_PRESENT: {
+                            if(mIsPlayRandom){
+                                mIsPlayRandom=false;
+                                mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_shuffle_dark));
+                            }
                             mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_one_song_dark));
                             Toast.makeText(MainActivity.this, R.string.loop_song_present, Toast.LENGTH_SHORT).show();
                             mIsLoopPresent=true;
@@ -435,6 +439,10 @@ public class MainActivity extends AppCompatActivity
                 mPLayRandom.setSelected(!mPLayRandom.isSelected());
 
                 if (mPLayRandom.isSelected()) {
+                    if(mIsLoopPresent){
+                        mIsLoopPresent=false;
+                        mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark_selected));
+                    }
                     mIsPlayRandom =true;
                     mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_play_shuffle_orange));
                     Toast.makeText(MainActivity.this, R.string.on_random_play, Toast.LENGTH_SHORT).show();
