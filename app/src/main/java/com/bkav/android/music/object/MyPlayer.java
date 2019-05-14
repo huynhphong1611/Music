@@ -9,11 +9,20 @@ public class MyPlayer {
     private Context mContext;
     private String mPath;
 
-    public MediaPlayer getmMediaPlayer() {
-        return mMediaPlayer;
+    public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
+        this.mMediaPlayer = mMediaPlayer;
     }
 
-    public MyPlayer() {
+    public Context getmContext() {
+        return this.mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public MediaPlayer getmMediaPlayer() {
+        return this.mMediaPlayer;
     }
 
     public MyPlayer(Context mContext, String mPath) {

@@ -24,6 +24,8 @@ import com.bkav.android.music.interfaces.ItemClickListenerSong;
 import com.bkav.android.music.interfaces.OnSelectedListener;
 import com.bkav.android.music.object.Song;
 
+import java.util.List;
+
 public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,ItemClickListenerSong {
     final static int ID_LOADER=1;
     private CursorLoader mCursorLoader;
@@ -37,8 +39,8 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
     private OnSelectedListener mOnSelectedListener;
 
     @Override
-    public void takeSongFromAdapter(Cursor cursor,int positon) {
-        mOnSelectedListener.onSelectedListener(cursor,positon);
+    public void takeSongFromAdapter(List<Song> listSong,int positon) {
+        mOnSelectedListener.onSelectedListener(listSong,positon);
     }
 
     @Override
@@ -62,7 +64,6 @@ public class FragmentSongs extends Fragment implements LoaderManager.LoaderCallb
         mRecyclerViewSongs.setLayoutManager(linearLayoutManager);
         mSongsAdapter=new SongsAdapter(getContext());
         mSongsAdapter.setmItemClickListenerSong(this);
-
         return view;
     }
 

@@ -47,4 +47,5 @@
     <dimen name="text_size_name_singer">14sp</dimen>
     <dimen name="text_size_name_song_album">12sp</dimen>
     <dimen name="text_size_name_singer_album">10sp</dimen>
+    <dimen name="text_size_phat_all_song">18sp</dimen>
 </resources>

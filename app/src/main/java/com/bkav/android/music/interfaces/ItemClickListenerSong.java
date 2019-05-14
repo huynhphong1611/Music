@@ -4,6 +4,8 @@ import android.database.Cursor;
 
 import com.bkav.android.music.object.Song;
 
+import java.util.List;
+
 public interface ItemClickListenerSong {
-    void takeSongFromAdapter(Cursor cursor, int positon);
+    void takeSongFromAdapter(List<Song> listSong, int positon);
 }

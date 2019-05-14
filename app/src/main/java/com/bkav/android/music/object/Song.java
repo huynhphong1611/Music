@@ -1,6 +1,9 @@
 package com.bkav.android.music.object;
 
-public class Song {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Song implements Parcelable {
     private long mId;
     private String mNameSong;
     private String mNameSinger;
@@ -89,4 +92,45 @@ public class Song {
     public void setmAlbum(String mAlbum) {
         this.mAlbum = mAlbum;
     }
+
+    protected Song(Parcel in) {
+        mId = in.readLong();
+        mNameSong = in.readString();
+        mNameSinger = in.readString();
+        mTimeSong = in.readString();
+        mPath = in.readString();
+        mAlbum = in.readString();
+        mAlbumArt = in.readString();
+        mAlbumId = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
+        dest.writeString(mNameSong);
+        dest.writeString(mNameSinger);
+        dest.writeString(mTimeSong);
+        dest.writeString(mPath);
+        dest.writeString(mAlbum);
+        dest.writeString(mAlbumArt);
+        dest.writeString(mAlbumId);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Song> CREATOR = new Parcelable.Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 }

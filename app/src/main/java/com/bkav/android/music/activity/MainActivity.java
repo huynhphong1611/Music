@@ -5,9 +5,12 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -38,6 +42,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -54,11 +59,16 @@ import com.bkav.android.music.fragment.FragmentSongs;
 import com.bkav.android.music.interfaces.OnSelectedListener;
 import com.bkav.android.music.object.MyPlayer;
 import com.bkav.android.music.object.Song;
+import com.bkav.android.music.service.PlaySongService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
@@ -70,17 +80,16 @@ public class MainActivity extends AppCompatActivity
     public static final int LOOP_SONG_PRESENT=3;
     private static final String EXTRA_BUTTON_CLICKED = "click_play_noyification";
     public static int MY_PERMISSIONS_REQUEST = 1;
-    private static final String CHANNEL_ID = "PLAY_MUSIC";
-    private static  final int NOTIFICATION_ID=1;
     public static int[] NUMBER_MY_PERMISSIONS_REQUEST = {0, 1};
     public static String TAG = "trang thai";
+    public static String PATH_SONG="path_song";
     private FragmentArtists mFragmentArtists;
     private FragmentAlbum mFragmentAlbums;
     private FragmentSongs mFragmentSongs;
     private FragmentPlaylists mFragmentPlaylists;
     private LinearLayout mLinearLayoutPlayMusic;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
-    private Cursor mCursor;
+    private List<Song> mListSong;
     private ImageView mPLay;
     private ImageView mPLayFull;
     private ImageView mPLayRandom;
@@ -99,11 +108,30 @@ public class MainActivity extends AppCompatActivity
     //private MediaPlayer mMediaPlayer;
     private Handler threadHandler;
     private int mPositonSongCurren;
-    /*khai bao notification*/
-    private NotificationCompat.Builder mBuilder;
-    private NotificationManager mNotificationManager;
-    private MyPlayer mMyPlayer;
-    private RemoteViews mRemoteViews;
+    private boolean mIsLoopPresent;
+    private boolean mIsLoopAlllist;
+    private boolean mIsPlayRandom;
+    /*service*/
+    private Intent mIntentService;
+    private PlaySongService mPlaySongService;
+    private boolean mIsBound = false;
+    /*khai tạo ServiceConnection*/
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        // Phương thức này được hệ thống gọi khi kết nối tới service thành công
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlaySongService.MyBinder binder = (PlaySongService.MyBinder) service;
+            mPlaySongService = binder.getService(); // lấy đối tượng MyService
+            mIsBound = true;
+            Log.d(LOG,"onServiceConnected");
+            updateTimeCurrenAndSeekbar();
+        }
+        // Phương thức này được hệ thống gọi khi kết nối tới service bị lỗi
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mIsBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         init();
         initFragmentArtists(R.string.artists);
-
-
         setSupportActionBar(mToolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -135,9 +160,7 @@ public class MainActivity extends AppCompatActivity
         mSlidingUpPanelLayout.addPanelSlideListener(this);
         mSeekBar.setOnSeekBarChangeListener(this);
         /***********************************/
-
         Log.v(LOG,"onCreate");
-
     }
     public void init(){
         mPLay = (ImageView) findViewById(R.id.img_play);
@@ -154,12 +177,11 @@ public class MainActivity extends AppCompatActivity
         mImgSongSmall =(ImageView) findViewById(R.id.image_view_song);
         mImgSongFull= (LinearLayout) findViewById(R.id.layout_img_background);
         mSeekBar = (SeekBar) findViewById(R.id.seek_bar_time_play);
-        mMyPlayer =new MyPlayer();
         mTimeSong = (TextView) findViewById(R.id.txt_time_end);
         mTimeCurrenSong = (TextView) findViewById(R.id.txt_time_start);
-        /*notification*/
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mRemoteViews = new RemoteViews(getPackageName(),R.layout.activity_notification);
+        mListSong = new ArrayList<>();
+        mIntentService = new Intent(MainActivity.this,PlaySongService.class);
+        mPlaySongService = new PlaySongService();
 
     }
     @Override
@@ -338,37 +360,35 @@ public class MainActivity extends AppCompatActivity
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_light));
                     if(x!=0){
-                        mMyPlayer.fastForward(x);
+                        mPlaySongService.fastForward(x);
                     }else{
 
-                        mMyPlayer.play();
+                        mPlaySongService.play();
                     }
                 } else{
-                    x=mMyPlayer.getmMediaPlayer().getCurrentPosition();
+                    x=mPlaySongService.getMediaPlayer().getCurrentPosition();
                     mPLay.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_light));
-                    mMyPlayer.pause();
+                    mPlaySongService.pause();
                 }
-
                 break;
             }
             case R.id.image_play_song:{
                 mPLayFull.setSelected(!mPLayFull.isSelected());
-
                 if (mPLayFull.isSelected()) {
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_pause_dark));
                     if(x!=0){
-                        mMyPlayer.fastForward(x);
+                        mPlaySongService.fastForward(x);
                     }else{
 
-                        mMyPlayer.play();
+                        mPlaySongService.play();
                     }
                 } else{
-                    x=mMyPlayer.getmMediaPlayer().getCurrentPosition();
+                    x=mPlaySongService.getMediaPlayer().getCurrentPosition();
                     mPLayFull.setImageDrawable(getBaseContext().getResources()
                             .getDrawable(R.drawable.ic_media_play_dark));
-                    mMyPlayer.pause();
+                    mPlaySongService.pause();
                 }
 
                 break;
@@ -388,16 +408,22 @@ public class MainActivity extends AppCompatActivity
                         case LOOP_SONG_OFF: {
                             mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark));
                             Toast.makeText(MainActivity.this, R.string.loop_song_off, Toast.LENGTH_SHORT).show();
+                            mIsLoopPresent=false;
+                            mIsLoopAlllist=false;
                             break;
                         }
                         case LOOP_SONG_ALLLIST: {
                             mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_dark_selected));
                             Toast.makeText(MainActivity.this, R.string.loop_song_alllist, Toast.LENGTH_SHORT).show();
+                            mIsLoopPresent=false;
+                            mIsLoopAlllist=true;
                             break;
                         }
                         case LOOP_SONG_PRESENT: {
                             mPlayLoop.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_repeat_one_song_dark));
                             Toast.makeText(MainActivity.this, R.string.loop_song_present, Toast.LENGTH_SHORT).show();
+                            mIsLoopPresent=true;
+                            mIsLoopAlllist=false;
                             break;
                         }
                     }
@@ -409,12 +435,18 @@ public class MainActivity extends AppCompatActivity
                 mPLayRandom.setSelected(!mPLayRandom.isSelected());
 
                 if (mPLayRandom.isSelected()) {
+                    mIsPlayRandom =true;
                     mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_play_shuffle_orange));
                     Toast.makeText(MainActivity.this, R.string.on_random_play, Toast.LENGTH_SHORT).show();
                 } else {
+                    mIsPlayRandom=false;
                     mPLayRandom.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.ic_shuffle_dark));
                     Toast.makeText(MainActivity.this, R.string.off_random_play, Toast.LENGTH_SHORT).show();
                 }
+                break;
+            }
+            case R.id.img_phat_ngau_nhien:{
+                Toast.makeText(this, R.string.click_phat_ngau_nhien, Toast.LENGTH_SHORT).show();
                 break;
             }
         }
@@ -439,44 +471,33 @@ public class MainActivity extends AppCompatActivity
     }
     /*ban bai hat tu fragment sang*/
     @Override
-    public void onSelectedListener(Cursor cursor,  int position) {
-        mCursor=cursor;
-
+    public void onSelectedListener(List<Song> listSong,  int position) {
+        mListSong=listSong;
         mPositonSongCurren=position;
         threadHandler = new Handler();
         /****************cho bai hat chạy*************/
-        initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
-        mMyPlayer.play();
-        mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
-        mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
+        initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
+
+    }
+    /*update view time song*/
+    public void updateTimeCurrenAndSeekbar(){
+        mTimeCurrenSong.setText("0:0");
+        mSeekBar.setProgress(0);
+        mSeekBar.setMax(mPlaySongService.getMediaPlayer().getDuration());
+        mTimeSong.setText(millisecondsToString(mPlaySongService.getMediaPlayer().getDuration()));
         // Tạo một thread để update trạng thái của SeekBar.
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
         threadHandler.postDelayed(updateSeekBarThread,1000);
-
     }
-    //lay bai hat tu cursor
-    public Song takeSong(int position){
-        int currenCursor=0;
-        if(mCursor!=null){
-            if(mCursor.moveToFirst()){
-                do{
-                    if(currenCursor==position){
-                        Song song=new Song (mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
-                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
-                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
-                                ,0
-                                ,mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-                                ,null
-                                ,SongsAdapter.takeURIImgSong(mCursor),null);
-                        return song;
-                    }
-                    currenCursor++;
-                }while(mCursor.moveToNext());
+    /*take song from list song*/
+    public Song takeSongFromListSong(List<Song> listSong,int position){
+        Song song = new Song();
+        for(int i=0;i<=position;i++){
+            if(i==position){
+                song=listSong.get(i);
             }
         }
-
-
-        return null;
+        return song;
     }
     // Chuyển số lượng milli giây thành một String có ý nghĩa.
     private String millisecondsToString(int milliseconds)  {
@@ -499,72 +520,73 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            if(progress==mMyPlayer.getmMediaPlayer().getDuration()){
-                nextSong();
+            if(progress==mPlaySongService.getMediaPlayer().getDuration()){
+                if(mIsLoopPresent){
+                    initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
+                }else{
+                    nextSong();
+                }
             }else{
-                mMyPlayer.fastForward(progress);
+                mPlaySongService.fastForward(progress);
             }
         }
     /****************************/
     // Thread sử dụng để Update trạng thái cho SeekBar.
-    class UpdateSeekBarThread implements Runnable {
+    public class UpdateSeekBarThread implements Runnable {
 
         public void run()  {
-            String currentPosition = millisecondsToString(mMyPlayer.getmMediaPlayer().getCurrentPosition());
+            int isLoopSong=3;
+            String currentPosition = millisecondsToString(mPlaySongService.getMediaPlayer().getCurrentPosition());
             mTimeCurrenSong.setText(currentPosition);
-            mSeekBar.setProgress(mMyPlayer.getmMediaPlayer().getCurrentPosition());
-            if(currentPosition.equals(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()))){
+            mSeekBar.setProgress(mPlaySongService.getMediaPlayer().getCurrentPosition());
+            if(!mIsLoopPresent&&currentPosition.equals(millisecondsToString(mPlaySongService.getMediaPlayer().getDuration()))){
                 nextSong();
             }
-            Log.v(LOG+"curren: ", String.valueOf(currentPosition));
-            Log.v(LOG+"end: ", String.valueOf(mMyPlayer.getmMediaPlayer().getDuration()));
-            // Ngừng thread 50 mili giây.
+            if(mIsLoopPresent&&currentPosition.equals(millisecondsToString(mPlaySongService.getMediaPlayer().getDuration()))){
+                initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
+            }
+            Log.v(LOG+"curren: ",String.valueOf(currentPosition));
+            Log.v(LOG+"end: ", String.valueOf(mPlaySongService.getMediaPlayer().getDuration()));
+            // Ngừng thread 1 giây.
             threadHandler.postDelayed(this, 1000);
         }
 
     }
     /*ham chuyen bai khi chay het*/
     public void nextSong(){
-            //TODO chay lai hoac next
-            /*next*/
-            if(mPositonSongCurren==SongsAdapter.sCount){
+        if(mIsPlayRandom){
+            mPositonSongCurren = new Random().nextInt(mListSong.size()-1);
+            initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
+        }else{
+            if(mPositonSongCurren==mListSong.size()-1){
                 mPositonSongCurren=0;
             }else{
                 mPositonSongCurren++;
             }
-            mMyPlayer.end();
-            initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
-            mMyPlayer.play();
-            mTimeCurrenSong.setText("0:0");
-            mSeekBar.setProgress(0);
-            mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
-            mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
-
+            initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
+        }
     }
     public void preSong(){
-        if(mPositonSongCurren==0){
-            mPositonSongCurren=mCursor.getCount()-1;
+        if(mIsPlayRandom){
+            mPositonSongCurren = new Random().nextInt(mListSong.size()-1);
+            initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
         }else{
-            mPositonSongCurren--;
+            if(mPositonSongCurren==0){
+                mPositonSongCurren=mListSong.size()-1;
+            }else{
+                mPositonSongCurren--;
+            }
+            initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
         }
-        mMyPlayer.end();
-
-        initInfoSonginSlidingLayout(takeSong(mPositonSongCurren));
-        mMyPlayer.play();
-        mTimeCurrenSong.setText("0:0");
-        mSeekBar.setProgress(0);
-        mSeekBar.setMax(mMyPlayer.getmMediaPlayer().getDuration());
-        mTimeSong.setText(millisecondsToString(mMyPlayer.getmMediaPlayer().getDuration()));
     }
     /*ham init thong thin bai hat len Sliding layout*/
     public void initInfoSonginSlidingLayout(Song song){
-        if(mMyPlayer!=null)
-        {
-            mMyPlayer.end();
-            mMyPlayer = new MyPlayer(this,song.getmPath());
-        }else{
-            mMyPlayer = new MyPlayer(this,song.getmPath());
+        if(mIsBound){
+            unbindService(mServiceConnection);
+            mIsBound=false;
         }
+        mIntentService.putExtra(PATH_SONG,song);
+        bindService(mIntentService,mServiceConnection,Context.BIND_AUTO_CREATE);
 
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
@@ -580,61 +602,11 @@ public class MainActivity extends AppCompatActivity
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
             mImgSongFull.setBackground(new BitmapDrawable(getResources(),bitmap));
-            /*show notification*/
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(mMyPlayer.getmMediaPlayer().isPlaying()){
-            mMyPlayer.pause();
-            showNotification(song);
-
-        }else{
-            showNotification(song);
-        }
-
     }
     /**********************************************/
-    /*Notification*/
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-    public void showNotification(Song song){
-        createNotificationChannel();
-        Bitmap bitmap=null;
-        mBuilder=new NotificationCompat.Builder(this,CHANNEL_ID)
-                .setColor(ContextCompat.getColor(this,R.color.colorWhite))
-                .setSmallIcon(R.drawable.ic_fab_play_btn_normal)
-                .setCustomContentView(mRemoteViews);
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(song.getmAlbumArt()));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(bitmap==null){
-            mRemoteViews.setImageViewResource(R.id.img_song_notification,R.drawable.unknown_albums);
-        }else{
-            mRemoteViews.setImageViewBitmap(R.id.img_song_notification,bitmap);
-        }
-
-        mRemoteViews.setImageViewResource(R.id.image_pre_song_notification,R.drawable.ic_rew_dark);
-        mRemoteViews.setImageViewResource(R.id.image_next_song_notification,R.drawable.ic_fwd_dark);
-        mRemoteViews.setImageViewResource(R.id.image_play_song_notification,R.drawable.ic_media_pause_dark);
-        mRemoteViews.setTextViewText(R.id.txt_name_song_notification, song.getmNameSong());
-        mRemoteViews.setTextViewText(R.id.txt_name_singer_notification, song.getmNameSinger());
-        mNotificationManager.notify(NOTIFICATION_ID,mBuilder.build());
-    }
 }

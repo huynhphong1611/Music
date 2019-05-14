@@ -24,9 +24,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     private Context mContext;
     private String mNameSong,mNameSinger,mPath,mAlbumArt,mTimeSong;
+    private List<Song> mListSong;
     private ItemClickListenerSong mItemClickListenerSong;
     public static int sCount;
     public void setmItemClickListenerSong(ItemClickListenerSong mItemClickListenerSong) {
@@ -68,11 +72,20 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
             holder.setItemClickLIstenerRecyclerView(new ItemClickLIstenerRecyclerView() {
                 @Override
                 public void onClick(View v, int position) {
+                    /*mỗi lần click sẽ xóa list song và thêm lại song lại và đưa position và listsong sang activity */
+                    mListSong = new ArrayList<>();
+                    int x=0;
+                    cursor.moveToFirst();
+                    do{
+                        mListSong.add(getSongItem(x));
+                        x++;
+                    }while(cursor.moveToNext());
                     Song song=getSongItem(position);
-                    mItemClickListenerSong.takeSongFromAdapter(cursor,position);
+                    mItemClickListenerSong.takeSongFromAdapter(mListSong,position);
                     Toast.makeText(mContext, song.getmNameSong(), Toast.LENGTH_SHORT).show();
                 }
             });
+
         }
     }
     public static Song getSongItem(int position){

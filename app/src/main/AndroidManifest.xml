@@ -36,6 +36,7 @@
         <provider
             android:authorities="com.bkav.android.music.provider.SongProvider"
             android:name=".provider.SongProvider"></provider>
+        <service android:name=".service.PlaySongService" />
     </application>
 
 </manifest>
