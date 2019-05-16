@@ -12,6 +12,7 @@
         android:id="@+id/img_grid_song"
         android:layout_width="@dimen/img"
         android:layout_height="@dimen/img"
+        android:layout_margin="@dimen/margin"
         android:columnCount="2"
         android:rowCount="2">
         <ImageView

@@ -38,30 +38,61 @@ import java.util.HashMap;
     private FragmentArtists mFragmentArtists;
     private HashMap<Integer, Integer> mCursorHashMapChild;
 
-    public ArtistsAdapter(Context context, int groupLayout,
+    public ArtistsAdapter(FragmentArtists fragmentArtists,Context context, int groupLayout,
                           int childLayout, String[] groupFrom, int[] groupTo,
                           String[] childrenFrom, int[] childrenTo) {
         super(context, null, groupLayout, groupFrom, groupTo, childLayout,
                 childrenFrom, childrenTo);
+        mContext=context;
+        mFragmentArtists = fragmentArtists;
         mCursorHashMapChild = new HashMap<Integer,Integer>();
+
     }
     @Override
     protected Cursor getChildrenCursor(Cursor groupCursor) {
         int groupPos = groupCursor.getPosition();
         int groupId = groupCursor.getInt((groupCursor.getColumnIndexOrThrow
-                (MediaStore.Audio.Artists.ARTIST)));
+                (MediaStore.Audio.Artists._ID)));
+
         mCursorHashMapChild.put(groupId, groupPos);
-        /*Loader<Cursor> loader = mFragmentArtists.getLoaderManager().getLoader(groupId);
+        Loader<Cursor> loader = mFragmentArtists.getLoaderManager().getLoader(groupId);
         if (loader != null && !loader.isReset()) {
             mFragmentArtists.getLoaderManager()
                     .restartLoader(groupId, null, mFragmentArtists);
         } else {
             mFragmentArtists.getLoaderManager().initLoader(groupId, null, mFragmentArtists);
-        }*/
+        }
         return null;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+        @Override
+        protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+            super.bindGroupView(view, context, cursor, isExpanded);
+            TextView countAlbum=(TextView) view.findViewById(R.id.txt_count_album);
+            String count_album=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS));
+            countAlbum.setText(count_album+" album");
+        }
+
+        @Override
+        protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
+            super.bindChildView(view, context, cursor, isLastChild);
+
+            TextView countSongm = (TextView) view.findViewById(R.id.txt_name_singer);
+            String countSong=cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
+            countSongm.setText(countSong+" bài hát");
+            final ImageView imgSong = (ImageView) view.findViewById(R.id.img_song);
+            /*Image Loader de load anh tranh viec lag khi nhieu anh*/
+            initImageLoader().loadImage(takeImgSong(cursor),new SimpleImageLoadingListener(){
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    super.onLoadingComplete(imageUri, view, loadedImage);
+                    imgSong.setImageBitmap(loadedImage);
+                }
+            });
+
+        }
+
+        /*public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView countAlbum,countSongm,txtNameArtists;
         ImageView imgSong,imgMenuArtists, imgMenu,imgOne,imgTwo,imgThree,imgFour;
         GridLayout gridLayout;
@@ -84,7 +115,13 @@ import java.util.HashMap;
 
         }
 
-    }
+    }*/
+    //khoi tao image loader
+        public ImageLoader initImageLoader(){
+            ImageLoader imageLoader=ImageLoader.getInstance();
+            imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
+            return imageLoader;
+        }
     //Accessor method
     public HashMap<Integer, Integer> getCursorHashMapChild() {
         return mCursorHashMapChild;

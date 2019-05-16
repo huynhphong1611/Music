@@ -19,14 +19,12 @@ import android.widget.ImageView;
 
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.ArtistsAdapter;
-import com.bkav.android.music.adapter.PlaylistAdapter;
-import com.bkav.android.music.adapter.SongsAdapter;
+
 
 import java.util.HashMap;
 
 public class FragmentArtists extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER_ARTIST=1;
-    final static int ID_LOADER=1;
     private CursorLoader mCursorLoader;
     private ExpandableListView mExpandableListView;
     private ArtistsAdapter mArtistsAdapter;
@@ -38,19 +36,19 @@ public class FragmentArtists extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(ID_LOADER,null,this);
+        getLoaderManager().initLoader(ID_LOADER_ARTIST,null,this);
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_nghe_si,container,false);
         mExpandableListView = (ExpandableListView) view.findViewById(R.id.expand_list_view_artists);
-        mArtistsAdapter= new ArtistsAdapter(getContext()
+        mArtistsAdapter= new ArtistsAdapter(this,getContext()
                 ,R.layout.item_artists
-                ,R.layout.item_artists
+                ,R.layout.item_song
                 , new String[]{MediaStore.Audio.Artists.ARTIST}
                 , new int []{R.id.txt_name_artists}
-                , new String []{MediaStore.Audio.Artists.NUMBER_OF_ALBUMS}
-                , new int []{R.id.txt_count_album});
+                , new String []{MediaStore.Audio.Albums.ALBUM}
+                , new int []{R.id.txt_name_song});
         mExpandableListView.setAdapter(mArtistsAdapter);
         Loader<Cursor> loader = getLoaderManager().getLoader(-1);
         if (loader != null && !loader.isReset()) {
@@ -63,7 +61,7 @@ public class FragmentArtists extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(ID_LOADER,null,this);
+        getLoaderManager().restartLoader(ID_LOADER_ARTIST,null,this);
     }
 
 
@@ -71,15 +69,17 @@ public class FragmentArtists extends Fragment implements LoaderManager.LoaderCal
     @Override
     public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
 
-        if(i!=ID_LOADER){
+        if(i==ID_LOADER_ARTIST){
             mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
                     ,null
                     ,null,null,null);
             return mCursorLoader;
         }else{
-            mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            String selection =MediaStore.Audio.Media.ARTIST_ID+"=?";
+            mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
                     ,null
-                    ,null,null,null);
+                    ,selection
+                    ,new String[]{String.valueOf(i)},null);
             return mCursorLoader;
         }
 
