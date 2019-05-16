@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentSongs mFragmentSongs;
     private FragmentPlaylists mFragmentPlaylists;
     private LinearLayout mLinearLayoutPlayMusic;
+    private LinearLayout mControlPlayMusic;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private List<Song> mListSong;
     private ImageView mPLay;
@@ -149,7 +150,9 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         /*****lang nghe onCLick*********/
+
         mPLay.setOnClickListener(this);
         mPLayRandom.setOnClickListener(this);
         mPLayFull.setOnClickListener(this);
@@ -169,6 +172,7 @@ public class MainActivity extends AppCompatActivity
         mPlayLoop = (ImageView) findViewById(R.id.image_loop_song);
         mNextSong = (ImageView) findViewById(R.id.image_next_song);
         mPreSong =(ImageView) findViewById(R.id.image_pre_song);
+        mControlPlayMusic = (LinearLayout) findViewById(R.id.view_play_music);
         mLinearLayoutPlayMusic = (LinearLayout) findViewById(R.id.view_list_and_menu);
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -268,6 +272,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment, mFragmentArtists);
         fragmentTransaction.commit();
+
     }
 
     private void initFragmentAlbum(int titleActionBar) {
@@ -357,8 +362,7 @@ public class MainActivity extends AppCompatActivity
                 mPLay.setSelected(!mPLay.isSelected());
 
                 if (mPLay.isSelected()) {
-                    mPLay.setImageDrawable(getBaseContext().getResources()
-                            .getDrawable(R.drawable.ic_media_pause_light));
+                    displayPlayMusic();
                     if(x!=0){
                         mPlaySongService.fastForward(x);
                     }else{
@@ -367,8 +371,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else{
                     x=mPlaySongService.getMediaPlayer().getCurrentPosition();
-                    mPLay.setImageDrawable(getBaseContext().getResources()
-                            .getDrawable(R.drawable.ic_media_play_light));
+                    displayPauseMusic();
                     mPlaySongService.pause();
                 }
                 break;
@@ -376,8 +379,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.image_play_song:{
                 mPLayFull.setSelected(!mPLayFull.isSelected());
                 if (mPLayFull.isSelected()) {
-                    mPLayFull.setImageDrawable(getBaseContext().getResources()
-                            .getDrawable(R.drawable.ic_media_pause_dark));
+                    displayPlayMusic();
                     if(x!=0){
                         mPlaySongService.fastForward(x);
                     }else{
@@ -386,8 +388,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else{
                     x=mPlaySongService.getMediaPlayer().getCurrentPosition();
-                    mPLayFull.setImageDrawable(getBaseContext().getResources()
-                            .getDrawable(R.drawable.ic_media_play_dark));
+                    displayPauseMusic();
                     mPlaySongService.pause();
                 }
 
@@ -480,6 +481,7 @@ public class MainActivity extends AppCompatActivity
         mListSong=listSong;
         mPositonSongCurren=position;
         threadHandler = new Handler();
+
         /****************cho bai hat chạy*************/
         initInfoSonginSlidingLayout(takeSongFromListSong(mListSong,mPositonSongCurren));
 
@@ -597,10 +599,7 @@ public class MainActivity extends AppCompatActivity
         imageLoader.init(ImageLoaderConfiguration.createDefault(getBaseContext()));
         mNameSong.setText(song.getmNameSong());
         mNameSinger.setText(song.getmNameSinger());
-        mPLay.setImageDrawable(getBaseContext().getResources()
-                .getDrawable(R.drawable.ic_media_pause_light));
-        mPLayFull.setImageDrawable(getBaseContext().getResources()
-                .getDrawable(R.drawable.ic_media_pause_dark));
+        displayPlayMusic();
         mPLay.setSelected(true);
         mPLayFull.setSelected(true);
         imageLoader.displayImage(song.getmAlbumArt(),mImgSongSmall);
@@ -611,7 +610,20 @@ public class MainActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
     /**********************************************/
-
+    /*set hinh nut play bat tat*/
+    public void displayPlayMusic(){
+        mPLay.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_pause_light));
+        mPLayFull.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_pause_dark));
+    }
+    public void displayPauseMusic(){
+        mPLayFull.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_play_dark));
+        mPLay.setImageDrawable(getBaseContext().getResources()
+                .getDrawable(R.drawable.ic_media_play_light));
+    }
 }

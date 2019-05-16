@@ -22,7 +22,6 @@
    </FrameLayout>
     <!-- SLIDING LAYOUT -->
     <include
-
         layout="@layout/sliding_layout">
     </include>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
