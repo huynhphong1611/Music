@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/one"
+        android:title="Phát"/>
+
+    <item
+        android:id="@+id/two"
+        android:title="Thêm vào danh sách nhac"/>
+
+    <item
+        android:id="@+id/three"
+        android:title="Xóa"/>
+    <item
+        android:id="@+id/four"
+        android:title="Sửa dụng làm nhạc chuông điện thoại"/>
+
+    <item
+        android:id="@+id/five"
+        android:title="Share"/>
+
+    <item
+        android:id="@+id/six"
+        android:title="Details"/>
+</menu>

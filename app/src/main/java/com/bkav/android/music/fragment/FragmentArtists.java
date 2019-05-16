@@ -15,23 +15,110 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 
 import com.bkav.android.music.R;
 import com.bkav.android.music.adapter.ArtistsAdapter;
+import com.bkav.android.music.adapter.PlaylistAdapter;
+import com.bkav.android.music.adapter.SongsAdapter;
 
-public class FragmentArtists extends Fragment  {
+import java.util.HashMap;
+
+public class FragmentArtists extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     final static int ID_LOADER_ARTIST=1;
-    private CursorLoader mCursorLoaderArtists;
+    final static int ID_LOADER=1;
+    private CursorLoader mCursorLoader;
+    private ExpandableListView mExpandableListView;
+    private ArtistsAdapter mArtistsAdapter;
 
     public FragmentArtists(){
 
     }
 
-    @Nullable
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(ID_LOADER,null,this);
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_nghe_si,container,false);
+        mExpandableListView = (ExpandableListView) view.findViewById(R.id.expand_list_view_artists);
+        mArtistsAdapter= new ArtistsAdapter(getContext()
+                ,R.layout.item_artists
+                ,R.layout.item_artists
+                , new String[]{MediaStore.Audio.Artists.ARTIST}
+                , new int []{R.id.txt_name_artists}
+                , new String []{MediaStore.Audio.Artists.NUMBER_OF_ALBUMS}
+                , new int []{R.id.txt_count_album});
+        mExpandableListView.setAdapter(mArtistsAdapter);
+        Loader<Cursor> loader = getLoaderManager().getLoader(-1);
+        if (loader != null && !loader.isReset()) {
+            getLoaderManager().restartLoader(ID_LOADER_ARTIST, null, this);
+        } else {
+            getLoaderManager().initLoader(ID_LOADER_ARTIST, null, this);
+        }
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(ID_LOADER,null,this);
+    }
 
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+
+        if(i!=ID_LOADER){
+            mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+                    ,null
+                    ,null,null,null);
+            return mCursorLoader;
+        }else{
+            mCursorLoader=new CursorLoader(getContext(),MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    ,null
+                    ,null,null,null);
+            return mCursorLoader;
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        int id = loader.getId();
+        if (id != ID_LOADER_ARTIST) {
+            // child cursor
+            if (!data.isClosed()) {
+
+                HashMap<Integer, Integer> groupMap = mArtistsAdapter.getCursorHashMapChild();
+                try {
+                    int groupPos = groupMap.get(id);
+
+                    mArtistsAdapter.setChildrenCursor(groupPos, data);
+                } catch (NullPointerException e) {
+
+                }
+            }
+        } else {
+            mArtistsAdapter.setGroupCursor(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        // Called just before the cursor is about to be closed.
+        int id = loader.getId();
+        if (id != ID_LOADER_ARTIST) {
+            // child cursor
+            try {
+                mArtistsAdapter.setChildrenCursor(id, null);
+            } catch (NullPointerException e) {
+
+            }
+        } else {
+            mArtistsAdapter.setGroupCursor(null);
+        }
+    }
 }

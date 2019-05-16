@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +88,14 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
                 }
             });
 
+            holder.imgMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(mContext,holder.imgMenu);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_item_song,popupMenu.getMenu());
+                    popupMenu.show();
+                }
+            });
 
         }
     }
@@ -126,6 +135,7 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
             imgSong = (ImageView) itemView.findViewById(R.id.img_song);
             imgMenu = (ImageView) itemView.findViewById(R.id.img_menu_song);
             itemView.setOnClickListener(this);
+            imgMenu.setOnClickListener(this);
         }
 
         public void setItemClickLIstenerRecyclerView(ItemClickLIstenerRecyclerView itemClickLIstenerRecyclerView) {

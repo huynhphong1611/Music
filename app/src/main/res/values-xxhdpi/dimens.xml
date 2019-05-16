@@ -1,4 +1,7 @@
 <resources>
+    <!--height and weight for bphone 3-->
+    <dimen name="heigth">360dp</dimen>
+    <dimen name="width">720dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -41,6 +44,14 @@
     <dimen name="margin_notification_play">10dp</dimen>
     <dimen name="text_size_name_song_notification">18sp</dimen>
     <!--**********************-->
+    <!--****playlist****-->
+    <dimen name="wigth_item_playlist">180dp</dimen>
+    <dimen name="height_item_playlist">220dp</dimen>
+    <dimen name="height_grid_layout">180dp</dimen>
+    <dimen name="height_linear_layout">40dp</dimen>
+    <dimen name="size_img_playlist">80dp</dimen>
+    <dimen name="height_txt_name_playlist">150dp</dimen>
+    <dimen name="img_menu_wight_playlist">30dp</dimen>
 
     <!--size text-->
     <dimen name="text_size_name_song">16sp</dimen>
