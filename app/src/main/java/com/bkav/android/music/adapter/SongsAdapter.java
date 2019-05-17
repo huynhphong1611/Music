@@ -34,7 +34,6 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
     private String mNameSong,mNameSinger,mPath,mAlbumArt,mTimeSong;
     private List<Song> mListSong;
     private ItemClickListenerSong mItemClickListenerSong;
-    public static int sCount;
     public void setmItemClickListenerSong(ItemClickListenerSong mItemClickListenerSong) {
         this.mItemClickListenerSong = mItemClickListenerSong;
     }
@@ -53,7 +52,6 @@ public class SongsAdapter extends BaseCursorAdapter<SongsAdapter.ViewHolder> {
         ImageLoader imageLoader=ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
         if (cursor != null) {
-            sCount=cursor.getCount()-1;
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
             mNameSong = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
             mNameSinger = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));

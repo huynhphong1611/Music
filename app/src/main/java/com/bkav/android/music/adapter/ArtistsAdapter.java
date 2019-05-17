@@ -92,30 +92,6 @@ import java.util.HashMap;
 
         }
 
-        /*public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView countAlbum,countSongm,txtNameArtists;
-        ImageView imgSong,imgMenuArtists, imgMenu,imgOne,imgTwo,imgThree,imgFour;
-        GridLayout gridLayout;
-        LinearLayout linearLayout;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            linearLayout=(LinearLayout) itemView.findViewById(R.id.linear_layout_item_artists);
-            countAlbum=(TextView) itemView.findViewById(R.id.txt_count_album);
-            gridLayout=(GridLayout) itemView.findViewById(R.id.img_grid_song);
-            txtNameArtists =(TextView) itemView.findViewById(R.id.txt_name_artists);
-            imgMenuArtists= (ImageView) itemView.findViewById(R.id.img_menu_artists);
-            // su dung layout bên item_song
-            countSongm = (TextView) itemView.findViewById(R.id.txt_name_singer);
-            imgSong = (ImageView) itemView.findViewById(R.id.img_song);
-            imgMenu =(ImageView) itemView.findViewById(R.id.img_menu_song);
-            imgOne=(ImageView) itemView.findViewById(R.id.img_song_1);
-            imgTwo=(ImageView) itemView.findViewById(R.id.img_song_2);
-            imgThree=(ImageView) itemView.findViewById(R.id.img_song_3);
-            imgFour=(ImageView) itemView.findViewById(R.id.img_song_4);
-
-        }
-
-    }*/
     //khoi tao image loader
         public ImageLoader initImageLoader(){
             ImageLoader imageLoader=ImageLoader.getInstance();
